@@ -3,6 +3,8 @@ import socket
 import re
 from datetime import datetime
 
+import time
+import dictionary
 
 # Some basic variables used to configure the bot        
 server = "IRC.COLOSOLUTIONS.COM" # Server
@@ -34,29 +36,32 @@ while 1: # Be careful with these! it might send you to an infinite loop
   ircmsg = ircmsg.strip('\n\r') # removing any unnecessary linebreaks.
   print(ircmsg) # Here we print what's coming from the server
 
+  if ircmsg.find("PING :") != 1:
+    ping()
+    
   #while we're at it lets extract the users name using regular expressions
   usrname = re.match(":(\w+)!",ircmsg)
   if usrname:
     sendmsg(channel, usrname.group(1))
-  else:
-    sendmsg(channel, "Failure")
-
-  if ircmsg.find(":Hello "+ botnick) != -1: # If we can find "Hello Mybot" it will call the function hello()
-    hello()
- 
-   
+    print(usrname.group(1))
+  
   if (ircmsg.find("!time") != -1) or (ircmsg.find("!date") != -1):
     sendmsg(channel, str(datetime.now()))
-
-
-
-
-#if ircmsg.find(":jamaal!") != -1:
-  #  gsmcri = ircmsg.strip(":jamaal!~jamaal@mossad.golani.eu PRIVMSG #perthroad :")
-  #  gsmcri = gsmcri[::-1]
-  #  sendmsg(channel, gcri)
-
-  if ircmsg.find("PING :") != -1: # if the server pings us then we've got to respond!
-    ping()
-
-
+    print("date/time")
+    
+  if ircmsg.find("!dict") != -1:
+    print("Dictionary")
+    print(ircmsg)
+    define_word = re.search("!dict (\w+)", ircmsg)
+    if define_word:
+      matches = dictionary.lookup_dictionary(define_word.group(1))
+      sendmsg(channel, define_word.group(1).upper())
+      sendmsg(channel, "*" * 10)
+      for match in matches:
+        sendmsg(channel, "  " + match.definition)
+	time.sleep(1)
+      #definition = "SUCCESS"
+    else:
+      sendmsg(channel, 'No matches available. Please try again.')
+ 
+ 
