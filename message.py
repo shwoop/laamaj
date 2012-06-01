@@ -4,13 +4,13 @@
 
 import re
 
-class message:
-  _handle
-  _user
-  _locale
-  _type
-  _channel
-  _message
+class Message:
+  _handle = ''
+  _user = ''
+  _locale = ''
+  _type = ''
+  _channel = ''
+  _message = ''
 
   def parse(raw_message):
     parsed = re.match(":(\w+)!~(\w+)@(.*) (\w+) (#\w+) :(.*)",ircmsg)

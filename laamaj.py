@@ -11,10 +11,11 @@ import re
 from datetime import datetime
 import time
 import dictionary
+import message
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
-channel = "#perthroad"
-botnick = "laamaj"
+channel = "#laamaj"
+botnick = "laamaj2"
 #last_send_time = time.time()
 #send_lag = 3.4    # time between each IRC message (to avoid flood)
 
@@ -41,11 +42,15 @@ while 1:
   if ircmsg.find("PING :") != 1:
     ircsock.send("PONG :pingis\n")  
     
-  #usrname = re.match(":(\w+)!",ircmsg)
-  #if usrname:
-  #  sendmsg(channel, usrname.group(1))
-  #  print(usrname.group(1))
-  
+  #parsed = re.match(":(\w+)!~(\w+)@(.*) (\w+) (#\w+) :(.*)",ircmsg)
+  #if parsed:
+  #  handle = parsed.group(1)
+  #  user = parsed.group(2)
+  #  locale = parsed.group(3)
+  #  msg_type = parsed.group(4)
+  #  channel = parsed.group(5)
+  #  message = parsed.group(6)
+ 
   if (ircmsg.find("!time") != -1) or (ircmsg.find("!date") != -1):
     sendmsg(channel, str(datetime.now()))
     print("date/time")
