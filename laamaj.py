@@ -42,6 +42,9 @@ while 1:
   if ircmsg.find("PING :") != 1:
     ircsock.send("PONG :pingis\n")  
     
+  msg = message.Message()
+  msg.parse_msg(ircmsg)
+  print("user :" + msg.handle)
   #parsed = re.match(":(\w+)!~(\w+)@(.*) (\w+) (#\w+) :(.*)",ircmsg)
   #if parsed:
   #  handle = parsed.group(1)
