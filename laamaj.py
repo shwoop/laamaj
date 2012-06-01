@@ -1,49 +1,50 @@
-#import some necessary libraries.
+##
+##     LAAMAJ - IRC BOT
+##
+##  Commented out an attempt to limit the rate of message sends to avoid flood but
+##  time() and clock() don't appear to be working. Also began regex to pull appart
+##  message but only got as far as username atm.
+##
+
 import socket 
 import re
 from datetime import datetime
-
 import time
 import dictionary
 
-# Some basic variables used to configure the bot        
-server = "IRC.COLOSOLUTIONS.COM" # Server
-channel = "#laamaj" # Channel
-botnick = "laamaj" # Your bots nick
+server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
+channel = "#laamaj"
+botnick = "laamaj2"
+#last_send_time = time.time()
+#send_lag = 3.4    # time between each IRC message (to avoid flood)
 
-
-def ping(): # This is our first function! It will respond to server Pings.
-  ircsock.send("PONG :pingis\n")  
-
-def sendmsg(chan , msg): # This is the send message function, it simply sends messages to the channel.
-  ircsock.send("PRIVMSG "+ chan +" :"+ msg +"\n") 
-
-def joinchan(chan): # This function is used to join channels.
-  ircsock.send("JOIN "+ chan +"\n")
-
-def hello(): # This function responds to a user that inputs "Hello Mybot"
-  ircsock.send("PRIVMSG "+ channel +" :Fuck You!\n")
+def sendmsg(chan , msg):
+  # pick a channel and send it a message
+  #global last_send_time
+  #time_since_last = time.time() - last_send_time 
+  #if time_since_last < send_lag:
+  #  time.sleep(time_since_last)
+  ircsock.send("PRIVMSG "+ channel +" :"+ msg +"\n")
+  #last_send_time = time.time()
                   
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ircsock.connect((server, 6667)) # Here we connect to the server using the port 6667
-ircsock.send("USER "+ botnick +" "+ botnick +" "+ botnick +" :made from gurders.\n") # user authentication
-ircsock.send("NICK "+ botnick +"\n") # here we actually assign the nick to the bot
+ircsock.connect((server, 6667)) 
+ircsock.send("USER "+ botnick +" "+ botnick +" "+ botnick +" :made from gurders.\n")
+ircsock.send("NICK "+ botnick +"\n") 
+ircsock.send("JOIN "+ channel +"\n")
 
-joinchan(channel) # Join the channel using the functions we previously defined
-
-while 1: # Be careful with these! it might send you to an infinite loop
-  ircmsg = ircsock.recv(2048) # receive data from the server
-  ircmsg = ircmsg.strip('\n\r') # removing any unnecessary linebreaks.
-  print(ircmsg) # Here we print what's coming from the server
+while 1:
+  ircmsg = ircsock.recv(2048)
+  ircmsg = ircmsg.strip('\n\r')
+  print(ircmsg)
 
   if ircmsg.find("PING :") != 1:
-    ping()
+    ircsock.send("PONG :pingis\n")  
     
-  #while we're at it lets extract the users name using regular expressions
-  usrname = re.match(":(\w+)!",ircmsg)
-  if usrname:
-    sendmsg(channel, usrname.group(1))
-    print(usrname.group(1))
+  #usrname = re.match(":(\w+)!",ircmsg)
+  #if usrname:
+  #  sendmsg(channel, usrname.group(1))
+  #  print(usrname.group(1))
   
   if (ircmsg.find("!time") != -1) or (ircmsg.find("!date") != -1):
     sendmsg(channel, str(datetime.now()))
@@ -54,14 +55,17 @@ while 1: # Be careful with these! it might send you to an infinite loop
     print(ircmsg)
     define_word = re.search("!dict (\w+)", ircmsg)
     if define_word:
-      matches = dictionary.lookup_dictionary(define_word.group(1))
-      sendmsg(channel, define_word.group(1).upper())
-      sendmsg(channel, "*" * 10)
-      for match in matches:
-        sendmsg(channel, "  " + match.definition)
-	time.sleep(1)
-      #definition = "SUCCESS"
+      key_word = define_word.group(1)
+      matches = dictionary.lookup_dictionary(key_word)
+      if matches:
+        sendmsg(channel, key_word.upper())
+        sendmsg(channel, "*" * len(key_word))
+        for match in matches:
+          sendmsg(channel, " " * len(key_word) + match.definition)
+          time.sleep(2.5)
+      else:
+        sendmsg(channel, "  No definition exists for that word.")
     else:
-      sendmsg(channel, 'No matches available. Please try again.')
+      sendmsg(channel, '  Please use the format "!dict <word>"')
  
  
