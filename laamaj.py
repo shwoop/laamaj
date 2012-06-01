@@ -13,8 +13,8 @@ import time
 import dictionary
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
-channel = "#laamaj"
-botnick = "laamaj2"
+channel = "#perthroad"
+botnick = "laamaj"
 #last_send_time = time.time()
 #send_lag = 3.4    # time between each IRC message (to avoid flood)
 
