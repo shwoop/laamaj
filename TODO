@@ -1,0 +1,9 @@
+
+    TODO
+
+  1. Move the logic to brain.py to take care of all of the processing and optimise a little.
+  2. Add logic to track users in channel
+    a. First idea is to add a "welcome back" message if they've not spoken or been online for a while (12 hours)
+  3. Add some vaguely varied speach.  e.g. welcome back [(you firty fucker)|(you bender)|(cock-whore)]
+  4. begin sentence analysis
+
