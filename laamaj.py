@@ -15,7 +15,7 @@ import message
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
 default_channel = "#laamaj"
-nick = "laamaj2"
+nick = "laamaj"
 #last_send_time = time.time()
 #send_lag = 3.4    # time between each IRC message (to avoid flood)
 channels = [default_channel]
@@ -52,6 +52,10 @@ while 1:
   print(msg.message)
 
   #  parse the message against a number of keywords
+  #parsed = re.match("!where", msg.message)
+  #if parsed:
+  #  sendmsg("Current Channels: " + channels)
+
   parsed = re.match("!fuckoffto (#\w+)", msg.message)
   if parsed:
     print("f.off")
@@ -65,7 +69,6 @@ while 1:
   if parsed:
     print("time")
     sendmsg(msg.channel, str(datetime.now()))
-
 
   parsed = re.match("!dict (\w+)", msg.message)
   if parsed:
