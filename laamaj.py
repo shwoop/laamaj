@@ -14,25 +14,29 @@ import dictionary
 import message
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
-channel = "#laamaj"
-botnick = "laamaj2"
+default_channel = "#laamaj"
+nick = "laamaj2"
 #last_send_time = time.time()
 #send_lag = 3.4    # time between each IRC message (to avoid flood)
+channels = [default_channel]
 
 def sendmsg(chan , msg):
-  # pick a channel and send it a message
+  # pick a default_channel and send it a message
   #global last_send_time
   #time_since_last = time.time() - last_send_time 
   #if time_since_last < send_lag:
   #  time.sleep(time_since_last)
-  ircsock.send("PRIVMSG "+ channel +" :"+ msg +"\n")
+  ircsock.send("PRIVMSG "+ chan +" :"+ msg +"\n")
   #last_send_time = time.time()
-                  
+    
+def joinchan(chan):
+  ircsock.send("JOIN " + chan + "\n")
+              
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ircsock.connect((server, 6667)) 
-ircsock.send("USER "+ botnick +" "+ botnick +" "+ botnick +" :made from gurders.\n")
-ircsock.send("NICK "+ botnick +"\n") 
-ircsock.send("JOIN "+ channel +"\n")
+ircsock.send("USER "+ nick +" "+ nick +" "+ nick +" :made from gurders.\n")
+ircsock.send("NICK "+ nick +"\n") 
+ircsock.send("JOIN "+ default_channel +"\n")
 
 while 1:
   ircmsg = ircsock.recv(2048)
@@ -41,39 +45,42 @@ while 1:
 
   if ircmsg.find("PING :") != 1:
     ircsock.send("PONG :pingis\n")  
-    
+
+  #  parse the message into the Message class for easy access    
   msg = message.Message()
   msg.parse_msg(ircmsg)
-  print("user :" + msg.handle)
-  #parsed = re.match(":(\w+)!~(\w+)@(.*) (\w+) (#\w+) :(.*)",ircmsg)
-  #if parsed:
-  #  handle = parsed.group(1)
-  #  user = parsed.group(2)
-  #  locale = parsed.group(3)
-  #  msg_type = parsed.group(4)
-  #  channel = parsed.group(5)
-  #  message = parsed.group(6)
- 
-  if (ircmsg.find("!time") != -1) or (ircmsg.find("!date") != -1):
-    sendmsg(channel, str(datetime.now()))
-    print("date/time")
+  print(msg.message)
+
+  #  parse the message against a number of keywords
+  parsed = re.match("!fuckoffto (#\w+)", msg.message)
+  if parsed:
+    print("f.off")
+    newchan = parsed.group(1)
+    joinchan(newchan)
+    print("Joining channel " + newchan)
+    sendmsg(newchan, "Sup Bitches!\n")
+    channels.append(newchan)
     
-  if ircmsg.find("!dict") != -1:
-    print("Dictionary")
-    print(ircmsg)
-    define_word = re.search("!dict (\w+)", ircmsg)
-    if define_word:
-      key_word = define_word.group(1)
-      matches = dictionary.lookup_dictionary(key_word)
-      if matches:
-        sendmsg(channel, key_word.upper())
-        sendmsg(channel, "*" * len(key_word))
-        for match in matches:
-          sendmsg(channel, " " * len(key_word) + match.definition)
-          time.sleep(2.5)
-      else:
-        sendmsg(channel, "  No definition exists for that word.")
+  parsed = re.match("!time", msg.message)
+  if parsed:
+    print("time")
+    sendmsg(msg.channel, str(datetime.now()))
+
+
+  parsed = re.match("!dict (\w+)", msg.message)
+  if parsed:
+    print("dict")
+    keyword = parsed.group(1)
+    matches =  dictionary.lookup_dictionary(keyword)
+    if matches:
+      sendmsg(msg.channel, keyword.upper())
+      sendmsg(msg.channel, "*" * len(keyword))
+      for match in matches:
+        sendmsg(msg.channel, " " * len(keyword) + match.definition)
+        time.sleep(2.5)
     else:
-      sendmsg(channel, '  Please use the format "!dict <word>"')
- 
- 
+      sendmsg(msg.channel, "  No definition found.")
+  #else:
+    #sendmsg(msg.channel, "  Please use the format '!dict <word>'")
+
+
