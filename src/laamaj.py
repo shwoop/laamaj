@@ -74,7 +74,7 @@ while 1:
   if parsed:
     print("dict")
     keyword = parsed.group(1)
-    matches =  dictionary.lookup_dictionary(keyword)
+    matches =  dictionary.lookup_synset(keyword)
     if matches:
       sendmsg(msg.channel, keyword.upper())
       sendmsg(msg.channel, "*" * len(keyword))

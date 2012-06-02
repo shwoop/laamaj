@@ -2,13 +2,15 @@
 #    Using NLTK and WordNet
 from nltk.corpus import wordnet
 
-def lookup_dictionary(check_word):
-  # feed in a word and return a long string of definition
-  #synsets = wordnet.synsets(check_word)
-  #for synset in synsets:
-  #  output = check_word + ": " + synset.definition
-  #return output
+def lookup_synset(check_word):
+  # Return the whole synset from wordnet
   return wordnet.synsets(check_word)
 
-#print (lookup_dictionary("space"))
+def lookup_definition(check_word):
+  # extract and return list of definitions from wordnet
+  synsets = wordnet.synsets(check_word)
+  definitions = []
+  for synset in synsets:
+    definitions.append(synset.definition)
+  return definitions
 
