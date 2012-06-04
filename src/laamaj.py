@@ -15,9 +15,8 @@ import message
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
 default_channel = "#laamaj"
-nick = "laamaj2"
-#last_send_time = time.time()
-#send_lag = 3.4    # time between each IRC message (to avoid flood)
+nick = "laamaj"
+send_lag = 3.4    # time between each IRC message (to avoid flood)
 channels = [default_channel]
 
 def sendmsg(chan , msg):
@@ -45,10 +44,29 @@ while 1:
   msg.parse_msg(ircmsg)
   print(msg.message)
 
-  parsed = re.match("(http://www\..*)", msg.message)
-  if parsed:
-    print("url" + parsed.group(0))
-    sendmsg(msg.channel, "nice url "+msg.handle+", better not be CP!")
+  if msg.message_action == "dict":
+    print("dictionary time")
+    if msg.message_focus:
+      sendmsg(msg.channel, msg.message_focus)
+      sendmsg(msg.channel, "*" * len(msg.message_focus))
+      matches = dictionary.lookup_definition(msg.message_focus)
+      if matches:
+        for match in matches:
+          sendmsg(msg.channel, " " * len(msg.message_focus) + match)
+          time.sleep(send_lag)
+      else:
+        sendmsg(msg.channel, "" * len(msg.message_focus) + "No definition found")
+      
+
+
+
+#########
+#  The below is depricated now the message is parsed in the call to parse_msg
+
+#  parsed = re.match("(http://www\..*)", msg.message)
+#  if parsed:
+#    print("url" + parsed.group(0))
+#    sendmsg(msg.channel, "nice url "+msg.handle+", better not be CP!")
 
 #  parsed = re.match("!fuckoffto (#\w+)", msg.message)
 #  if parsed:
@@ -65,20 +83,16 @@ while 1:
 #    print("time")
 #    sendmsg(msg.channel, str(datetime.now()))
 
-  parsed = re.match("!dict (\w+)", msg.message)
-  if parsed:
-    print("dict")
-    keyword = parsed.group(1)
-    matches =  dictionary.lookup_synset(keyword)
-    if matches:
-      sendmsg(msg.channel, keyword.upper())
-      sendmsg(msg.channel, "*" * len(keyword))
-      for match in matches:
-        sendmsg(msg.channel, " " * len(keyword) + match.definition)
-        time.sleep(2.5)
-    else:
-      sendmsg(msg.channel, "  No definition found.")
-  #else:
-    #sendmsg(msg.channel, "  Please use the format '!dict <word>'")
-
-
+#  parsed = re.match("!dict (\w+)", msg.message)
+#  if parsed:
+#    print("dict")
+#    keyword = parsed.group(1)
+#    matches =  dictionary.lookup_synset(keyword)
+#    if matches:
+#      sendmsg(msg.channel, keyword.upper())
+#      sendmsg(msg.channel, "*" * len(keyword))
+#      for match in matches:
+#        sendmsg(msg.channel, " " * len(keyword) + match.definition)
+#        time.sleep(2.5)
+#    else:
+#      sendmsg(msg.channel, "  No definition found.")
