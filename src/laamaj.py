@@ -15,19 +15,13 @@ import message
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
 default_channel = "#laamaj"
-nick = "laamaj"
+nick = "laamaj2"
 #last_send_time = time.time()
 #send_lag = 3.4    # time between each IRC message (to avoid flood)
 channels = [default_channel]
 
 def sendmsg(chan , msg):
-  # pick a default_channel and send it a message
-  #global last_send_time
-  #time_since_last = time.time() - last_send_time 
-  #if time_since_last < send_lag:
-  #  time.sleep(time_since_last)
   ircsock.send("PRIVMSG "+ chan +" :"+ msg +"\n")
-  #last_send_time = time.time()
     
 def joinchan(chan):
   ircsock.send("JOIN " + chan + "\n")
@@ -51,24 +45,25 @@ while 1:
   msg.parse_msg(ircmsg)
   print(msg.message)
 
-  #  parse the message against a number of keywords
-  #parsed = re.match("!where", msg.message)
-  #if parsed:
-  #  sendmsg("Current Channels: " + channels)
+  parsed = re.match("(http://www\..*)", msg.message)
+  if parsed:
+    print("url" + parsed.group(0))
+    sendmsg(msg.channel, "nice url "+msg.handle+", better not be CP!")
 
-  parsed = re.match("!fuckoffto (#\w+)", msg.message)
-  if parsed:
-    print("f.off")
-    newchan = parsed.group(1)
-    joinchan(newchan)
-    print("Joining channel " + newchan)
-    sendmsg(newchan, "Sup Bitches!\n")
-    channels.append(newchan)
+#  parsed = re.match("!fuckoffto (#\w+)", msg.message)
+#  if parsed:
+#    print("f.off")
+#    newchan = parsed.group(1)
+#    joinchan(newchan)
+#    print("Joining channel " + newchan)
+#    sendmsg(newchan, "Sup Bitches!\n")
+#    channels.append(newchan)
+
     
-  parsed = re.match("!time", msg.message)
-  if parsed:
-    print("time")
-    sendmsg(msg.channel, str(datetime.now()))
+#  parsed = re.match("!time", msg.message)
+#  if parsed:
+#    print("time")
+#    sendmsg(msg.channel, str(datetime.now()))
 
   parsed = re.match("!dict (\w+)", msg.message)
   if parsed:
