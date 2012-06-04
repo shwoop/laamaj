@@ -12,6 +12,11 @@ import socket
 import time
 import dictionary
 import message
+import appdir
+import database
+import sys
+import sqlite3
+
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
 default_channel = "#laamaj"
@@ -30,6 +35,11 @@ ircsock.connect((server, 6667))
 ircsock.send("USER "+ nick +" "+ nick +" "+ nick +" :made from gurders.\n")
 ircsock.send("NICK "+ nick +"\n") 
 ircsock.send("JOIN "+ default_channel +"\n")
+
+# oped database connection etc
+db = database.Database()
+db.connect()
+
 
 while 1:
   ircmsg = ircsock.recv(2048)
@@ -73,41 +83,10 @@ while 1:
       # a bit limited but faster than using ANOTHER regex
       print (msg.message)
       sendmsg(msg.channel, "It looks like " + msg.handle + " posted a URL")
-
-
-#########
-#  The below is depricated now the message is parsed in the call to parse_msg
-
-#  parsed = re.match("(http://www\..*)", msg.message)
-#  if parsed:
-#    print("url" + parsed.group(0))
-#    sendmsg(msg.channel, "nice url "+msg.handle+", better not be CP!")
-
-#  parsed = re.match("!fuckoffto (#\w+)", msg.message)
-#  if parsed:
-#    print("f.off")
-#    newchan = parsed.group(1)
-#    joinchan(newchan)
-#    print("Joining channel " + newchan)
-#    sendmsg(newchan, "Sup Bitches!\n")
-#    channels.append(newchan)
-
-    
-#  parsed = re.match("!time", msg.message)
-#  if parsed:
-#    print("time")
-#    sendmsg(msg.channel, str(datetime.now()))
-
-#  parsed = re.match("!dict (\w+)", msg.message)
-#  if parsed:
-#    print("dict")
-#    keyword = parsed.group(1)
-#    matches =  dictionary.lookup_synset(keyword)
-#    if matches:
-#      sendmsg(msg.channel, keyword.upper())
-#      sendmsg(msg.channel, "*" * len(keyword))
-#      for match in matches:
-#        sendmsg(msg.channel, " " * len(keyword) + match.definition)
-#        time.sleep(2.5)
-#    else:
-#      sendmsg(msg.channel, "  No definition found.")
+      try:
+        db.run_query("insert into websites values (\'"+msg.handle+"\',\'"+msg.channel+"\',\'"+msg.message+"\');")
+        db.commit()   
+      except sqlite3.Error, e:
+        print("Error : "+e.args[0])
+   # not commiting the changes for some reason but also not throwing an error?
+   # pain in the arse. !
