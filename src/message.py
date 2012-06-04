@@ -1,5 +1,6 @@
 ##
 ##    message class
+##  Parse recieved IRC message into relevant secions
 ##
 
 import re

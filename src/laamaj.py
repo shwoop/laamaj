@@ -44,7 +44,9 @@ while 1:
   msg.parse_msg(ircmsg)
   print(msg.message)
 
-  if msg.message_action == "dict":
+  # do some logic.  to be moved to a seperate file.
+
+  if msg.message_action == "dict":      # someone has asked for a definition
     print("dictionary time")
     if msg.message_focus:
       sendmsg(msg.channel, msg.message_focus)
@@ -56,8 +58,21 @@ while 1:
           time.sleep(send_lag)
       else:
         sendmsg(msg.channel, "" * len(msg.message_focus) + "No definition found")
-      
 
+  if msg.message_action == "chnls":     # fire out the channels you're listening to
+    output = ""
+    for channel in channels:
+      if output:      
+        output = output + ", " + channel
+      else:
+        output = channel
+      sendmsg(msg.channel, output)
+
+  if msg.message_action == "NO ACTION": # found a url (to save)
+    if msg.message.find("http://") != -1 or msg.message.find("www.") != -1:
+      # a bit limited but faster than using ANOTHER regex
+      print (msg.message)
+      sendmsg(msg.channel, "It looks like " + msg.handle + " posted a URL")
 
 
 #########
