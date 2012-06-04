@@ -43,7 +43,8 @@ class Database:
 
 if __name__ == "__main__":
   try:
-    con = lite.connect(appdir.APPDIR+"/db/"+"laamaj.db")
+    #con = lite.connect(appdir.APPDIR+"/db/"+"laamaj.db")
+    con = lite.connect("../db/laamaj.db")
     cur = con.cursor()
     cur.execute("select * from users")
     users = cur.fetchall()
