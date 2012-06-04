@@ -7,8 +7,8 @@
 ##
 
 import socket 
-import re
-from datetime import datetime
+#import re
+#from datetime import datetime
 import time
 import dictionary
 import message
