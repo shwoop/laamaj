@@ -51,7 +51,7 @@ class Database:
   def add_website(self, user, chan, website):
     print("adding website")
     self.__connect()
-    output = self.__run_query("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url) VALUES (date(\'now\'),\'"+user+"\',\'"+chan+"\',\'"+website+"\');")
+    output = self.__run_query("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url) VALUES (date('now'), '?', '?', '?');", user, chan, websites)
     self.__commit()
     self.__close()
     return output
@@ -60,7 +60,7 @@ class Database:
     print("output sites")
     try:
       self.__connect()
-      data = self.__run_query("select ws_user||\' - \'||ws_chan||\' - \'||ws_url from websites where ws_id > (select max(ws_id) from websites) - "+str(numero)+" order by ws_id desc;")
+      data = self.__run_query("select ws_user||\' - \'||ws_chan||\' - \'||ws_url from websites where ws_id > (select max(ws_id) from websites) - ? order by ws_id desc;", str(numero))
       if data:
         print (data)
     except sqlite3.Error, e:
