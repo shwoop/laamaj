@@ -7,12 +7,9 @@
 ##
 
 import socket 
-#import re
-#from datetime import datetime
 import time
 import dictionary
 import message
-import appdir
 import database
 import sys
 import sqlite3
@@ -36,10 +33,9 @@ ircsock.send("USER "+ nick +" "+ nick +" "+ nick +" :made from gurders.\n")
 ircsock.send("NICK "+ nick +"\n") 
 ircsock.send("JOIN "+ default_channel +"\n")
 
-# oped database connection etc
-db = database.Database()
-db.connect()
 
+
+db = database.Database()
 
 while 1:
   ircmsg = ircsock.recv(2048)
@@ -56,7 +52,7 @@ while 1:
 
   # do some logic.  to be moved to a seperate file.
 
-  if msg.message_action == "dict":      # someone has asked for a definition
+  if msg.message_action == "dict":            # someone has asked for a definition
     print("dictionary time")
     if msg.message_focus:
       sendmsg(msg.channel, msg.message_focus)
@@ -69,24 +65,36 @@ while 1:
       else:
         sendmsg(msg.channel, "" * len(msg.message_focus) + "No definition found")
 
-  if msg.message_action == "chnls":     # fire out the channels you're listening to
-    output = ""
-    for channel in channels:
-      if output:      
-        output = output + ", " + channel
-      else:
-        output = channel
-      sendmsg(msg.channel, output)
+  #if msg.message_action == "chnls":          # fire out the channels you're listening to
+    #output = ""
+    #for channel in channels:
+      #if output:      
+        #output = output + ", " + channel
+      #else:
+        #output = channel
+      #sendmsg(msg.channel, output)
 
-  if msg.message_action == "NO ACTION": # found a url (to save)
+  #if msg.message_action == "NO ACTION":       # found a url (to save)
+    #if msg.message.find("http://") != -1 or msg.message.find("www.") != -1:
+      #print ("URL : "+msg.message)
+      ##sendmsg(msg.channel, "It looks like " + msg.handle + " posted a URL")
+      #try:
+        #db.connect()
+        #db.run_query("insert into websites (ws_date, ws_user, ws_chan, ws_url)  values (date(\'now\'),\'"+msg.handle+"\',\'"+msg.channel+"\',\'"+msg.message+"\');")
+        #db.commit()   
+      #except sqlite3.Error, e:
+        #print("Error : "+e.args[0])
+      #finally:
+        #db.close()
+
+  if msg.message_action == "NO ACTION":       # found a url (to save)
     if msg.message.find("http://") != -1 or msg.message.find("www.") != -1:
-      # a bit limited but faster than using ANOTHER regex
-      print (msg.message)
-      sendmsg(msg.channel, "It looks like " + msg.handle + " posted a URL")
-      try:
-        db.run_query("insert into websites values (\'"+msg.handle+"\',\'"+msg.channel+"\',\'"+msg.message+"\');")
-        db.commit()   
-      except sqlite3.Error, e:
-        print("Error : "+e.args[0])
-   # not commiting the changes for some reason but also not throwing an error?
-   # pain in the arse. !
+      db.add_website(msg.handle, msg.channel, msg.message)
+
+
+  if msg.message_action == "sites":
+    sites = db.list_last_sites()
+    for site in sites:
+      sendmsg(msg.channel, str(site[0]))
+      time.sleep(send_lag)
+

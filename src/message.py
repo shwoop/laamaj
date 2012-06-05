@@ -23,7 +23,7 @@ class Message:
       self.mtype = parsed.group(4)
       self.channel = parsed.group(5)
       self.message = parsed.group(6)
-      parsed = re.match("!(\w+) (\w*)", self.message)  # analyse message to look for actions !dict etc
+      parsed = re.match("!(\w+) *(\w*)", self.message)  # analyse message to look for actions !dict etc
       if parsed:
         self.message_action = parsed.group(1)
         if parsed.group(2):  # need to check as there doesn't need to be a focus for the action
