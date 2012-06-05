@@ -3,7 +3,7 @@
 --
 
 CREATE TABLE users (
-  u_name
+  u_name PRIMARY KEY
 )
 /
 
