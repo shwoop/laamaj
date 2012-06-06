@@ -12,13 +12,14 @@ import dictionary
 import sys
 import sqlite3
 
+import irc
 import message
 import database
 
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
-default_channel = "#lamaajtest"
-nick = "laamaj2"
+default_channel = "#perthroad"
+nick = "laamaj"
 ident = "lamaaj"
 realname = "made from gurders"
 send_lag = 3.4    # time between each IRC message (to avoid flood)
@@ -32,7 +33,7 @@ def connectHandler(connection, server):
            connection.join(channel)
 
 def textHandler(connection, msgfrom, target, text):
-    print(target + ' <' + msgfrom + '> ' + text)
+    print(target + ': <' + msgfrom + '> ' + text)
 
 def joinHandler(connection, who, channel):
     print(who + ' has joined ' + channel)
@@ -44,7 +45,7 @@ def rawHandler(connection, ircmsg):
     #  parse the message into the Message class for easy access    
     msg = message.Message()
     msg.parse_msg(ircmsg)
-    print(msg.message)
+    #print(msg.message)
 
     # do some logic.  to be moved to a seperate file.
 
@@ -99,6 +100,9 @@ db = database.Database()
 
 con = irc.Irc(server, 6667, nick, ident, realname)
 con.add_on_raw_handler(rawHandler)
-con.add_on_connect_handler(connectHandler)
+con.add_on_connected_handler(connectHandler)
+con.add_on_text_handler(textHandler)
+con.add_on_join_handler(joinHandler)
+con.add_on_part_handler(partHandler)
 con.connect()
 con.process()
