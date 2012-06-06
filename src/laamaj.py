@@ -16,7 +16,7 @@ import sqlite3
 
 
 server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
-default_channel = "#laamaj"
+default_channel = "#perthroad"
 nick = "laamaj"
 send_lag = 3.4    # time between each IRC message (to avoid flood)
 channels = [default_channel]
@@ -88,8 +88,9 @@ while 1:
         #db.close()
 
   if msg.message_action == "NO ACTION":       # found a url (to save)
-    if msg.message.find("http://") != -1 or msg.message.find("www.") != -1:
-      db.add_website(msg.handle, msg.channel, msg.message)
+    for word in msg.message.split():
+      if word.find("http") != -1:
+        db.add_website(msg.handle, msg.channel, word)
 
 
   if msg.message_action == "sites":
