@@ -24,9 +24,9 @@ class Irc:
         #self.Connect(server, port, nick, ident, realname)
 
     def connect(self):
-        self.connect_to_server(self.server, self.port, self.nick, self.ident, self.realname)
+        self.__connect_to_server(self.server, self.port, self.nick, self.ident, self.realname)
 
-    def connect_to_server(self, server, port, nick, ident, realname):
+    def __connect_to_server(self, server, port, nick, ident, realname):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((server, port))
         self.send("NICK %s" % nick)
@@ -51,59 +51,59 @@ class Irc:
     def add_on_part_handler(self, obj):
         self.onPartHandlers.append(obj)
 
-    def call_on_raw_handlers(self, text):
+    def __call_on_raw_handlers(self, text):
         for obj in self.onRawHandlers:
             obj(self, text)
 
-    def call_on_connected_handlers(self, server):
+    def __call_on_connected_handlers(self, server):
         for obj in self.onConnectedHandlers:
             obj(self, server)
 
-    def call_on_text_handlers(self, msgfrom, target, text):
+    def __call_on_text_handlers(self, msgfrom, target, text):
         for obj in self.onTextHandlers:
             obj(self, msgfrom, target, text)
 
-    def call_on_ctcp_handlers(self, msgfrom, target, text):
+    def __call_on_ctcp_handlers(self, msgfrom, target, text):
         for obj in self.onCtcpHandlers:
             obj(self, msgfrom, target, text)
 
-    def call_on_join_handlers(self, who, channel):
+    def __call_on_join_handlers(self, who, channel):
         for obj in self.onJoinHandlers:
             obj(self, who, channel)
 
-    def call_on_part_handlers(self, who, channel):
+    def __call_on_part_handlers(self, who, channel):
         for obj in self.onPartHandlers:
             obj(self, who, channel)
 
-    def on_raw(self, text):
+    def __on_raw(self, text):
         if (DEBUG_IRC):
             print(text)
-        self.call_on_raw_handlers(text)
+        self.__call_on_raw_handlers(text)
 
-    def on_connected(self, server):
-        self.call_on_connected_handlers(server)
+    def __on_connected(self, server):
+        self.__call_on_connected_handlers(server)
 
-    def on_ctcp(self, msgfrom, target, text):
+    def __on_ctcp(self, msgfrom, target, text):
         #can't rely on handlers to implement this, it's
         #required or some servers might boot us off
         if (text == chr(1) + 'VERSION' + chr(1)):
             self.send_ctcp_msg(msgfrom, 'VERSION ' + IRCVERSION)
 
-        self.call_on_ctcp_handlers(msgfrom, target, text)
+        self.__call_on_ctcp_handlers(msgfrom, target, text)
 
-    def on_text(self, msgfrom, target, text):
-        if (self.is_ctcp_msg(text)):
-            self.on_ctcp(msgfrom, target, text)
+    def __on_text(self, msgfrom, target, text):
+        if (self.__is_ctcp_msg(text)):
+            self.__on_ctcp(msgfrom, target, text)
         else:
-            self.call_on_text_handlers(msgfrom, target, text)
+            self.__call_on_text_handlers(msgfrom, target, text)
 
-    def on_join(self, who, channel):
-        self.call_on_join_handlers(who, channel)
+    def __on_join(self, who, channel):
+        self.__call_on_join_handlers(who, channel)
 
-    def on_part(self, who, channel):
-        self.call_on_part_handlers(who, channel)
+    def __on_part(self, who, channel):
+        self.__call_on_part_handlers(who, channel)
 
-    def is_ctcp_msg(self, msg):
+    def __is_ctcp_msg(self, msg):
         if (msg[0] == chr(1) and msg.endswith(chr(1))):
             #print('is ctcp msg')
             return True
@@ -149,9 +149,9 @@ class Irc:
 
                 if (line[1] == '001'):
                     self.connected = True
-                    self.on_connected(self.server)
+                    self.__on_connected(self.server)
  
-                self.on_raw(fullline)
+                self.__on_raw(fullline)
                 
                 msgfrom = line[0].split('!')[0].strip(':')
 
@@ -160,13 +160,13 @@ class Irc:
                     if (target == self.nick):
                         target = ''
                     msg = ' '.join(line[3:])[1:]    
-                    self.on_text(msgfrom, target, msg)
+                    self.__on_text(msgfrom, target, msg)
                 
                 if (line[1] == 'JOIN'):
                     channel = line[2][1:]
-                    self.on_join(msgfrom, channel)
+                    self.__on_join(msgfrom, channel)
 
                 if (line[1] == 'PART'):
                     channel = line[2]
-                    self.on_part(msgfrom, channel)
+                    self.__on_part(msgfrom, channel)
 
