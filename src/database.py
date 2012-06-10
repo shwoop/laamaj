@@ -6,17 +6,21 @@
 ##
 
 import sqlite3
+import md5
+from urllib import urlretrieve
 
 class Database:
     """
     Database Class
     Connects on init and has add_website and list_last_sites for adding or reading a website from the database.
     """
-    def __init__(self, database="../db/laamaj.db"):
+    def __init__(self, database="../db/laamaj.db", imgdir = '../db/img/'):
         self.__con = None
         self.__cur = None
         self.__db = database
         self.__connect()
+
+        self.__imgdir = imgdir
 
     def __del__(self):
         self.__close()
@@ -48,7 +52,25 @@ class Database:
 
     def add_website(self, user, chan, website):
         print("adding website")
-        output = self.__cur.execute("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url) VALUES (date('now'), ?, ?, ?);", (user, chan, website))
+        if (website.endswith('.jpg') or website.endswith('.jpeg') or website.endswith('.png') or website.endswith('.gif')):
+                origfile = website.split('/')
+                origfile = origfile.pop()
+                print('Original filename: ' + origfile)
+                
+                extension = origfile.split('.')
+                extension = extension.pop()
+                
+                m = md5.new()
+                m.update(origfile)
+
+                localfilename = md5.new(origfile).hexdigest() + '.' + extension
+
+                urlretrieve(website, self.__imgdir + localfilename)
+
+                output = self.__cur.execute("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) VALUES (date('now'), ?, ?, ?, ?);", (user, chan, website, localfilename))
+        else:
+            output = self.__cur.execute("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) VALUES (date('now'), ?, ?, ?, ?);", (user, chan, website, ''))
+
         self.__con.commit()
         return output
 
