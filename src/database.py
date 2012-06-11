@@ -1,5 +1,5 @@
 ##
-##        DATABSE
+##        DATABASE
 ##    
 ##    TODO
 ##    * checking for dropped connection
@@ -52,25 +52,22 @@ class Database:
 
     def add_website(self, user, chan, website):
         print("adding website")
-        if (website.endswith('.jpg') or website.endswith('.jpeg') or website.endswith('.png') or website.endswith('.gif')):
+        exts = ['.jpg', '.jpeg', '.png', '.gif']
+        for ext in exts:
+            if (website.endswith(ext)):
                 origfile = website.split('/')
                 origfile = origfile.pop()
                 print('Original filename: ' + origfile)
-                
-                extension = origfile.split('.')
-                extension = extension.pop()
-                
-                m = md5.new()
-                m.update(origfile)
 
-                localfilename = md5.new(origfile).hexdigest() + '.' + extension
+                localfilename = md5.new(origfile).hexdigest() + ext
 
                 urlretrieve(website, self.__imgdir + localfilename)
 
                 output = self.__cur.execute("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) VALUES (date('now'), ?, ?, ?, ?);", (user, chan, website, localfilename))
-        else:
-            output = self.__cur.execute("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) VALUES (date('now'), ?, ?, ?, ?);", (user, chan, website, ''))
+                self.__con.commit()
+                return output
 
+        output = self.__cur.execute("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) VALUES (date('now'), ?, ?, ?, ?);", (user, chan, website, ''))
         self.__con.commit()
         return output
 
