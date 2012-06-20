@@ -104,12 +104,10 @@ class Irc:
         self.__call_on_part_handlers(who, channel)
 
     def __is_ctcp_msg(self, msg):
-        if (msg[0] == chr(1) and msg.endswith(chr(1))):
-            #print('is ctcp msg')
-            return True
-        else:
-            #print('not ctcp msg')
-            return False
+        if (len(msg) > 0):
+            if (msg[0] == chr(1) and msg.endswith(chr(1))):
+                return True
+        return False
     
     def join(self, channel):
         self.send('JOIN ' + channel)
