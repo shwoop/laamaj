@@ -49,18 +49,18 @@ def rawHandler(connection, ircmsg):
 
     # do some logic.  to be moved to a seperate file.
 
-    if msg.message_action == "dict":            # someone has asked for a definition
-        print("dictionary time")
-        if msg.message_focus:
-            connection.send_msg(msg.channel, msg.message_focus)
-            connection.send_msg(msg.channel, "*" * len(msg.message_focus))
-            matches = dictionary.lookup_definition(msg.message_focus)
-            if matches:
-                for match in matches:
-                    connection.send_msg(msg.channel, " " * len(msg.message_focus) + match)
-                    time.sleep(send_lag)
-            else:
-                connection.send_msg(msg.channel, "" * len(msg.message_focus) + "No definition found")
+   #if msg.message_action == "dict":            # someone has asked for a definition
+        #print("dictionary time")
+        #if msg.message_focus:
+            #connection.send_msg(msg.channel, msg.message_focus)
+            #connection.send_msg(msg.channel, "*" * len(msg.message_focus))
+            #matches = dictionary.lookup_definition(msg.message_focus)
+            #if matches:
+                #for match in matches:
+                    #connection.send_msg(msg.channel, " " * len(msg.message_focus) + match)
+                    #time.sleep(send_lag)
+           #else:
+                #connection.send_msg(msg.channel, "" * len(msg.message_focus) + "No definition found")
 
     #if msg.message_action == "chnls":          # fire out the channels you're listening to
         #output = ""
