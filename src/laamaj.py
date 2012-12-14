@@ -87,7 +87,10 @@ def rawHandler(connection, ircmsg):
     if msg.message_action == "NO ACTION":       # found a url (to save)
         for word in msg.message.split():
             if word.find("http") != -1:
-                db.add_website(msg.handle, msg.channel, word)
+                if sb.is_repost > 0:
+                    connection.send_msg(msg.channel, "Don't report ya FUD")
+                else:
+                    db.add_website(msg.handle, msg.channel, word)
 
 
     if msg.message_action == "sites":
