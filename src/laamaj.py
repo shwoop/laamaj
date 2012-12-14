@@ -17,7 +17,9 @@ import message
 import database
 
 
-server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
+#server = "IRC.COLOSOLUTIONS.COM"  # EFNet - this server DOES NOT have a kaptcha ;)
+#server = "IRC.EFNET.ORD"
+server = "efnet.port80.se"
 default_channel = "#perthroad"
 nick = "laamaj"
 ident = "lamaaj"
@@ -87,7 +89,7 @@ def rawHandler(connection, ircmsg):
     if msg.message_action == "NO ACTION":       # found a url (to save)
         for word in msg.message.split():
             if word.find("http") != -1:
-                if sb.is_repost > 0:
+                if db.is_repost > 0:
                     connection.send_msg(msg.channel, "Don't report ya FUD")
                 else:
                     db.add_website(msg.handle, msg.channel, word)
