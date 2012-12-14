@@ -52,7 +52,7 @@ class Database:
 
     def is_repost(self, website):
         print ('checking if this is a repost')
-        return self.__cur.execute("SELECT count(*) FROM websites WHERE ws_url = ?;", websites)
+        return self.__cur.execute("SELECT count(*) FROM websites WHERE ws_url = ?;", website)
 
     def add_website(self, user, chan, website):
         print("adding website")
