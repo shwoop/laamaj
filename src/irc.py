@@ -1,6 +1,7 @@
 import socket
 import string
 import sys
+import time
 
 IRCVERSION = 'python Irc'
 DEBUG_IRC = False 
