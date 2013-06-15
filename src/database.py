@@ -50,10 +50,6 @@ class Database:
         if self.__con:
             self.__con.commit()
 
-    def is_repost(self, website):
-        print ('checking if this is a repost')
-        return self.__cur.execute("SELECT count(*) FROM websites WHERE ws_url = ?;", website)
-
     def add_website(self, user, chan, website):
         print("adding website")
         exts = ['.jpg', '.jpeg', '.png', '.gif']
