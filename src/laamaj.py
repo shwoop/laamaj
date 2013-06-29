@@ -8,7 +8,6 @@
 
 
 import time
-import dictionary
 import sys
 import sqlite3
 
