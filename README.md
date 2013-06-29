@@ -1,14 +1,14 @@
 LAAMAJ
 ======
 
->PYTHON IRC BOT PROJECT
+>Python IRC Bot Project
 
 Laamaj is a toy project to get some experience with Python, Git and Github.
 The Intention is to expand it with new technologies as and when we decide to play with it.
 
 Currently hosted on bitg.bummedinthegob.co.uk
 
->PREREQUISITES
+>Dependencies
     
 [python 2.7][1]
 
