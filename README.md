@@ -14,5 +14,12 @@ Currently hosted on bitg.bummedinthegob.co.uk
 
 [sqlite3][2]
 
+>ToDo
+
+ * Implement a basic web portal to host the content we're storing up. (probably [flask][3])
+ * Add [mongodb][4] support
+
 [1]: http://www.python.org/
 [2]: http://www.sqlite.org/
+[3]: http://flask.pocoo.org/
+[4]: http://www.mongodb.org/
