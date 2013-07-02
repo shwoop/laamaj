@@ -16,10 +16,8 @@ def __parseConfig(options):
     try:
         f = open(options['CONFIG'])
     except:
-        print 'CANNOT OPEN CONFIG FILE'
-        __usage()
-        assert False, 'Config does not exist'
-    
+        print 'ERROR: Cannot open config {0}'.format(options['CONFIG'])
+        sys.exit() 
     for line in f:
     
         if '#' in line:
@@ -43,17 +41,11 @@ def __parseArguments(options):
     -> dict -> dict
     Parse runtime arguments
     """
-    desc="""
-    Laamaj IRC Bot
-        Grabber of links and pictures
-        Hopefully eventually a shower of them"""
     aParse = argparse.ArgumentParser(description='Laamaj IRC Bot\nGrabber of links/pictures and hopefully shower of them')
-    aParse.add_argument('-t','--test',action='store_true',help='Engage test mode')
+    aParse.add_argument('-t','--test',action='store_true',help='Engage test mode (join EFNET #laamajtest')
     aParse.add_argument('-c','--config',help='Specify config file (default .../laamaj/config.cfg')
     args = aParse.parse_args()
 
-    print args
-    
     if args.test:
         toupdate = {'TESTMODE':True,'NICK':'laamajtest','IDENT':'laamajtest','CHANNEL':'laamajtest'}
         for k, v in toupdate.iteritems():
@@ -73,9 +65,8 @@ def __optionExists(options, req):
     Print error and return
     """
     if req not in options.keys():
-        warning = "ERROR: {0} has not been set.".format(req)
-        print warning
-        assert False, warning
+        print "ERROR: {0} has not been set.".format(req)
+        sys.exit()
     return True
 
 
@@ -105,7 +96,4 @@ def getParameters():
 
 
 if __name__ == '__main__':
-    """
-    Quick testing 
-    """
     print getParameters()
