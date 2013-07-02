@@ -2,7 +2,7 @@
 ##  Playing about with puthon to get arguments
 ##
 
-import sys, getopt
+import sys, argparse
 
 __requirements = ['NICK','CONFIG','CHANNEL','SERVER','IDENT','REALNAME']
 
@@ -10,6 +10,7 @@ __requirements = ['NICK','CONFIG','CHANNEL','SERVER','IDENT','REALNAME']
 def __parseConfig(options):
     """
     __parseConfig
+    -> dict -> dict
     Parse a config file.
     """
     try:
@@ -36,59 +37,38 @@ def __parseConfig(options):
     return options
 
 
-def __usage():
-    """
-    __Usage
-    Help blurb
-    """
-    
-    print """
-    Laamaj IRC bot
-
-    Laamaj doesn't accept any arguments.
-
-    -h : List Usage
-    -t : Test Mode
-         nick     laamajtest
-         channel  #laamajtestchannel
-    -c : Config File
-    """
-    
-    return True
-
-
 def __parseArguments(options):
     """
-    __parseArguments -> dict -> dict
+    __parseArguments
+    -> dict -> dict
     Parse runtime arguments
     """
-    try:
-        opts, args = getopt.getopt(sys.argv[1:],'htc:')
-    except getopt.GetoptError as err:
-        print(str(err))
-        __usage()
-        return False
+    desc="""
+    Laamaj IRC Bot
+        Grabber of links and pictures
+        Hopefully eventually a shower of them"""
+    aParse = argparse.ArgumentParser(description='Laamaj IRC Bot\nGrabber of links/pictures and hopefully shower of them')
+    aParse.add_argument('-t','--test',action='store_true',help='Engage test mode')
+    aParse.add_argument('-c','--config',help='Specify config file (default .../laamaj/config.cfg')
+    args = aParse.parse_args()
+
+    print args
     
-    if len(args):
-        __usage()
-        return False
+    if args.test:
+        toupdate = {'TESTMODE':True,'NICK':'laamajtest','IDENT':'laamajtest','CHANNEL':'laamajtest'}
+        for k, v in toupdate.iteritems():
+            options[k] = v
     
-    for opt, arg in opts:
-        if opt == '-h':
-            __usage()
-        elif opt == '-t':
-            toupdate = {'TESTMODE':True,'NICK':'laamajtest','IDENT':'laamajtest','CHANNEL':'laamajtest'}
-            for k, v in toupdate.iteritems():
-                options[k] = v
-        elif opt == '-c':
-            options['CONFIG'] = str(arg)
+    if args.config:
+        options['CONFIG'] = args.config
 
     return options
 
 
 def __optionExists(options, req):
     """
-    __optionExists -> dict -> str -> bool
+    __optionExists
+    -> dict -> str -> bool
     Check if value exists.
     Print error and return
     """
@@ -101,7 +81,8 @@ def __optionExists(options, req):
 
 def __validateOptions(options):
     """
-    __validateOptions -> dict -> bool
+    __validateOptions
+    -> dict -> bool
     Check all required options have been set in config.
     """
     for requirement in __requirements:
@@ -111,7 +92,8 @@ def __validateOptions(options):
 
 def getParameters():
     """
-    getPerameters -> dict
+    getPerameters
+    -> dict
     Return config accorging to config file overridden by command line arguments
     """
     options = {'TESTMODE':False, 'CONFIG':'../config.cfg'}
