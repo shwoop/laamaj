@@ -8,11 +8,8 @@ __requirements = ['NICK','CONFIG','CHANNEL','SERVER','IDENT','REALNAME']
 
 
 def __parseConfig(options):
-    """
-    __parseConfig
-    -> dict -> dict
-    Parse a config file.
-    """
+    """ Parse the config file. """
+
     try:
         f = open(options['CONFIG'])
     except:
@@ -36,11 +33,8 @@ def __parseConfig(options):
 
 
 def __parseArguments(options):
-    """
-    __parseArguments
-    -> dict -> dict
-    Parse runtime arguments
-    """
+    """ Parse runtime arguments. """
+
     aParse = argparse.ArgumentParser(description='Laamaj IRC Bot\nGrabber of links/pictures and hopefully shower of them')
     aParse.add_argument('-t','--test',action='store_true',help='Engage test mode (join EFNET #laamajtest')
     aParse.add_argument('-c','--config',help='Specify config file (default .../laamaj/config.cfg')
@@ -58,12 +52,8 @@ def __parseArguments(options):
 
 
 def __optionExists(options, req):
-    """
-    __optionExists
-    -> dict -> str -> bool
-    Check if value exists.
-    Print error and return
-    """
+    """ Check option has been set. """
+
     if req not in options.keys():
         print "ERROR: {0} has not been set.".format(req)
         sys.exit()
@@ -71,22 +61,16 @@ def __optionExists(options, req):
 
 
 def __validateOptions(options):
-    """
-    __validateOptions
-    -> dict -> bool
-    Check all required options have been set in config.
-    """
+    """ Check all required options have been set in config. """
+
     for requirement in __requirements:
         __optionExists(options, requirement)
     return True
 
 
 def getParameters():
-    """
-    getPerameters
-    -> dict
-    Return config accorging to config file overridden by command line arguments
-    """
+    """ Return config accorging to config file overridden by command line arguments. """
+    
     options = {'TESTMODE':False, 'CONFIG':'../config.cfg'}
     options = __parseArguments(options)
     options = __parseConfig(options) 
