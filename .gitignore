@@ -2,5 +2,6 @@
 *.db
 *.db.bk
 *.jpg
+*.jpeg
 *.gif
 *.png

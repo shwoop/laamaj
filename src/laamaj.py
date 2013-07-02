@@ -11,6 +11,7 @@ from config import getParameters
 
 ## globals
 send_lag = 3.4    # time between each IRC message (to avoid flood)
+db = False
 options = {}    
 channels = []
 
@@ -58,6 +59,7 @@ def main():
     """
     global options
     global channels
+    global db
     options = getParameters()
     channels = ['#{0}'.format(options['CHANNEL'])]
 
