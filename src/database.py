@@ -15,10 +15,13 @@ class Database:
     Connects on init and has add_website and list_last_sites for adding
     or reading a website from the database.
     """
-    def __init__(self, database="../db/laamaj.db", imgdir = '../db/img/'):
+    def __init__(self, care_about_threads=False, database="../db/laamaj.db",
+            imgdir = '../db/img/'):
+        """ Create a database connection. """
         self._con = None
         self._cur = None
         self._db = database
+        self._care_about_threads = care_about_threads
         self._connect()
 
         self._imgdir = imgdir
@@ -35,7 +38,8 @@ class Database:
 
     def _connect(self):
         try:
-            self._con = sqlite3.connect(self._db)
+            self._con = sqlite3.connect(self._db,
+                check_same_thread=self._care_about_threads)
             self._cur = self._con.cursor()
             print("Connected to "+self._db)
         except sqlite3.Error, e:
@@ -103,9 +107,14 @@ class Database:
             data = "Error : {error}".format(error=e.args[0])
             return(data)
 
+    def exe(self, toexecute):
+        tmp = self._cur.execute(toexecute)
+        print (tmp)
+        return (tmp)
+
 
 if __name__ == "__main__":
     t_db = Database()
     t_db.list_last_sites()
-    t_db.add_website('test','test','http://www.test.com/image.jpg')
+    #t_db.add_website('test','test','http://www.test.com/image.jpg')
     t_db.add_website('test','test','http://www.test.com/')
