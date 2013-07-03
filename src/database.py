@@ -6,13 +6,14 @@
 ##
 
 import sqlite3
-import md5
+import hashlib
 from urllib import urlretrieve
 
 class Database:
     """
     Database Class
-    Connects on init and has add_website and list_last_sites for adding or reading a website from the database.
+    Connects on init and has add_website and list_last_sites for adding
+    or reading a website from the database.
     """
     def __init__(self, database="../db/laamaj.db", imgdir = '../db/img/'):
         self._con = None
@@ -59,15 +60,23 @@ class Database:
                 origfile = origfile.pop()
                 print('Original filename: ' + origfile)
 
-                localfilename = md5.new(origfile).hexdigest() + ext
+                localfilename = hashlib.md5(origfile).hexdigest() + ext
 
                 urlretrieve(website, self._imgdir + localfilename)
 
-                output = self._cur.execute("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) VALUES (date('now'), ?, ?, ?, ?);", (user, chan, website, localfilename))
+                output = self._cur.execute(
+                    "INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, \
+                    ws_localfile) VALUES (date('now'), ?, ?, ?, ?);",
+                    (user, chan, website, localfilename)
+                    )
                 self._con.commit()
                 return output
 
-        output = self._cur.execute("INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) VALUES (date('now'), ?, ?, ?, ?);", (user, chan, website, ''))
+        output = self._cur.execute(
+            "INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) \
+            VALUES (date('now'), ?, ?, ?, ?);",
+            (user, chan, website, '')
+            )
         self._con.commit()
         return output
 
@@ -75,7 +84,12 @@ class Database:
         print("output sites")
         try:
             print((str(numero)))
-            data = self._cur.execute("select ws_user||\' - \'||ws_chan||\' - \'||ws_url from websites where ws_id > (select max(ws_id) from websites) - ? order by ws_id desc;", (str(numero)))
+            data = self._cur.execute(
+            "select ws_user||\' - \'||ws_chan||\' - \'||ws_url from websites \
+            where ws_id > (select max(ws_id) from websites) - ? \
+            order by ws_id desc;",
+            (str(numero))
+            )
             if data:
                 print (data)
             else:
@@ -90,3 +104,4 @@ class Database:
 if __name__ == "__main__":
     t_db = Database()
     t_db.list_last_sites()
+    t_db.add_website('test','test','http://www.test.com/image.jpg')
