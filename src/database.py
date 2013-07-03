@@ -23,6 +23,13 @@ class Database:
 
         self._imgdir = imgdir
 
+        self._sql_insert_website = "INSERT INTO websites \
+            (ws_date, ws_user, ws_chan, ws_url, ws_localfile) \
+            VALUES (date('now'), ?, ?, ?, ?);"
+        self._sql_retreive_website = "select ws_user||\' - \'||ws_chan\
+            ||\' - \'||ws_url from websites where ws_id > (select max(ws_id) \
+            from websites) - ? order by ws_id desc;"
+
     def __del__(self):
         self._close()
 
@@ -65,16 +72,14 @@ class Database:
                 urlretrieve(website, self._imgdir + localfilename)
 
                 output = self._cur.execute(
-                    "INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, \
-                    ws_localfile) VALUES (date('now'), ?, ?, ?, ?);",
+                    self._sql_insert_website,
                     (user, chan, website, localfilename)
                     )
                 self._con.commit()
                 return output
 
         output = self._cur.execute(
-            "INSERT INTO websites (ws_date, ws_user, ws_chan, ws_url, ws_localfile) \
-            VALUES (date('now'), ?, ?, ?, ?);",
+            self._sql_insert_website,
             (user, chan, website, '')
             )
         self._con.commit()
@@ -85,10 +90,8 @@ class Database:
         try:
             print((str(numero)))
             data = self._cur.execute(
-            "select ws_user||\' - \'||ws_chan||\' - \'||ws_url from websites \
-            where ws_id > (select max(ws_id) from websites) - ? \
-            order by ws_id desc;",
-            (str(numero))
+                self._sql_retreive_website,
+                (str(numero))
             )
             if data:
                 print (data)
