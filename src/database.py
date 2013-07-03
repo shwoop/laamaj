@@ -108,3 +108,4 @@ if __name__ == "__main__":
     t_db = Database()
     t_db.list_last_sites()
     t_db.add_website('test','test','http://www.test.com/image.jpg')
+    t_db.add_website('test','test','http://www.test.com/')
