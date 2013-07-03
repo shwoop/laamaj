@@ -1,11 +1,16 @@
-##
-##        message class
-##    Parse recieved IRC message into relevant secions
-##
+"""
+Irc Message Parsing Module
+"""
+
+##  todo:
+##    make more pythonic
+##    strip out the regular expressions (?)
+##    move to the irc module (?)
 
 import re
 
 class Message:
+    """ Message parsing class. """
     handle = ''
     user = ''
     locale = ''
@@ -15,6 +20,19 @@ class Message:
     message_action = ''
     message_focus = ''
     def parse_msg(self, raw_message):
+        """
+        Parses provided raw irc message.
+        
+        Extracts:
+            handle
+            user
+            locale
+            mtype
+            channel
+            message
+            message_action (commands prefixed with !)
+            message_focus (parameters following the command)
+        """
         parsed = re.match(":(\w+)!~(\w+)@(.*) (\w+) (#\w+) :(.*)",raw_message)
         if parsed:
             self.handle = parsed.group(1)

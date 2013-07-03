@@ -1,13 +1,20 @@
-##
-##  Playing about with puthon to get arguments
-##
+"""
+Laamaj Config Module.
+Parse config file for configuration and override values with any
+command line arguments.
+"""
 
-import sys, argparse
+import sys
+import argparse
 
-__requirements = ['NICK','CONFIG','CHANNEL','SERVER','IDENT','REALNAME']
+
+_requirements = [
+    'NICK','CONFIG','CHANNEL',
+    'SERVER','IDENT','REALNAME'
+    ]
 
 
-def __parseConfig(options):
+def _parse_config(options):
     """ Parse the config file. """
 
     try:
@@ -32,16 +39,28 @@ def __parseConfig(options):
     return options
 
 
-def __parseArguments(options):
+def _parse_arguments(options):
     """ Parse runtime arguments. """
 
-    aParse = argparse.ArgumentParser(description='Laamaj IRC Bot\nGrabber of links/pictures and hopefully shower of them')
-    aParse.add_argument('-t','--test',action='store_true',help='Engage test mode (join EFNET #laamajtest')
-    aParse.add_argument('-c','--config',help='Specify config file (default .../laamaj/config.cfg')
+    aParse = argparse.ArgumentParser(
+        description='Laamaj IRC Bot\nGrabber of links/pictures \
+        and hopefully shower of them'
+        )
+    aParse.add_argument(
+        '-t', '--test', action='store_true',
+        help='Engage test mode (join EFNET #laamajtest'
+        )
+    aParse.add_argument(
+        '-c', '--config',
+        help='Specify config file (default .../laamaj/config.cfg'
+        )
     args = aParse.parse_args()
 
     if args.test:
-        toupdate = {'TESTMODE':True,'NICK':'laamajtest','IDENT':'laamajtest','CHANNEL':'laamajtest'}
+        toupdate = {
+            'TESTMODE':True,'NICK':'laamajtest',
+            'IDENT':'laamajtest','CHANNEL':'laamajtest'
+            }
         for k, v in toupdate.iteritems():
             options[k] = v
     
@@ -51,7 +70,7 @@ def __parseArguments(options):
     return options
 
 
-def __optionExists(options, req):
+def _option_exists(options, req):
     """ Check option has been set. """
 
     if req not in options.keys():
@@ -60,25 +79,31 @@ def __optionExists(options, req):
     return True
 
 
-def __validateOptions(options):
+def _validate_options(options):
     """ Check all required options have been set in config. """
 
-    for requirement in __requirements:
-        __optionExists(options, requirement)
+    for requirement in _requirements:
+        _option_exists(options, requirement)
     return True
 
 
-def getParameters():
-    """ Return config accorging to config file overridden by command line arguments. """
+def get_parameters():
+    """
+    Return config dictionary accorging to config file overridden by
+    command line arguments.
+    
+    TODO:
+    Add list of config keys
+    """
     
     options = {'TESTMODE':False, 'CONFIG':'../config.cfg'}
-    options = __parseArguments(options)
-    options = __parseConfig(options) 
-    __validateOptions(options)
+    options = _parse_arguments(options)
+    options = _parse_config(options) 
+    _validate_options(options)
 
     return options
 
 
 if __name__ == '__main__':
-    """ test """
-    print getParameters()
+    """ test. """
+    print get_parameters()

@@ -3,11 +3,15 @@
 ##
 
 ## standard library imports
-import time,  sys, sqlite3
+import time
+import sys
+import sqlite3
 
 ## local imports
-import irc, message, database
-from config import getParameters
+import irc
+import message
+import database
+from config import get_parameters
 
 ## globals
 send_lag = 3.4    # time between each IRC message (to avoid flood)
@@ -54,18 +58,24 @@ def rawHandler(connection, ircmsg):
 
 def main():
     """
-    Main
     Entry point to Laamaj
     """
+    
     global options
     global channels
     global db
-    options = getParameters()
+
+    options = get_parameters()
     channels = ['#{0}'.format(options['CHANNEL'])]
 
     db = database.Database()
 
-    con = irc.Irc(options['SERVER'],6667,options['NICK'],options['IDENT'],options['REALNAME'])
+    con = irc.Irc(options['SERVER'],
+        6667,
+        options['NICK'],
+        options['IDENT'],
+        options['REALNAME']
+        )
     con.add_on_raw_handler(rawHandler)
     con.add_on_connected_handler(connectHandler)
     con.add_on_text_handler(textHandler)
