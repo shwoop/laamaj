@@ -3,20 +3,21 @@
 ##
 
 ## standard library imports
+from __future__ import print_function   ## for lambda print
 import time
 import sys
 import sqlite3
 
 ## local imports
 import irc
-import message
+#import message
 import database
 from config import get_parameters
 
 ## globals
-send_lag = 3.4    # time between each IRC message (to avoid flood)
+send_lag = 1
 db = False
-options = {}    
+options = {}
 channels = []
 
 
@@ -28,32 +29,23 @@ def connectHandler(connection, server):
 
 def textHandler(connection, msgfrom, target, text):
     print(target + ': <' + msgfrom + '> ' + text)
-
-
-def joinHandler(connection, who, channel):
-    print(who + ' has joined ' + channel)
-
-
-def partHandler(connection, who, channel):
-    print(who + ' has left ' + channel)
-
-
-def rawHandler(connection, ircmsg):
-    #  parse the message into the Message class for easy access    
-    msg = message.Message()
-    msg.parse_msg(ircmsg)
-
-    if msg.message_action == "NO ACTION":       # found a url (to save)
-        for word in msg.message.split():
-            if word.find("http") != -1:
-                db.add_website(msg.handle, msg.channel, word)
-
-
-    if msg.message_action == "sites":
-        sites = db.list_last_sites()
-        for site in sites:
-            connection.send_msg(msg.channel, str(site[0]))
-            time.sleep(send_lag)
+    
+    ## Check for commands (!<command>) 
+    if (text.startswith('!')):
+        
+        command = text.split(' ',1)[0]
+        
+        if command == "!sites":
+            sites = db.list_last_sites()
+            for site in sites:
+                connection.send_msg(target, str(site[0]))
+                time.sleep(send_lag)
+    
+    else:
+        ## Parse for url's
+        for word in text.split():
+            if "http" in word:
+                db.add_website(msgfrom, target, word)
 
 
 def main():
@@ -76,11 +68,13 @@ def main():
         options['IDENT'],
         options['REALNAME']
         )
-    con.add_on_raw_handler(rawHandler)
+    
+    con.add_on_raw_handler(lambda con, msg: None)
     con.add_on_connected_handler(connectHandler)
     con.add_on_text_handler(textHandler)
-    con.add_on_join_handler(joinHandler)
-    con.add_on_part_handler(partHandler)
+    con.add_on_join_handler(lambda con, who, chan: print("{0} has joined {1}".format(who, chan)))
+    con.add_on_part_handler(lambda con, who, chan: print("{0} has left {1}".format(who, chan)))
+
     con.connect()
     con.process()
 
