@@ -52,8 +52,9 @@ def textHandler(connection, msgfrom, target, text):
                 res, out = db.add_website(msgfrom, target, word)
                 print (res, out)
                 if res == u"repost":
-                    connection.send_msg(target, "reposts of reposts \
-                            of reposts...")
+                    msg = u"{0}: {1} beat you to it.".format(msgfrom,
+                                                        out[0])
+                    connection.send_msg(target, msg)
 
 def main():
     """
