@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# vim: set fileencoding=utf-8 :
 import socket
 import string
 import sys

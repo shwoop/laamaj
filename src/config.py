@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# vim: set fileencoding=utf-8 :
 """
 Laamaj Config Module.
 Parse config file for configuration and override values with any
