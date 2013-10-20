@@ -22,31 +22,36 @@ channels = []
 
 
 def connectHandler(connection, server):
-    print('Connected to ' + server)
+    print(u"Connected to {0}".format(server))
     for channel in channels:
            connection.join(channel)
 
 
 def textHandler(connection, msgfrom, target, text):
-    print(target + ': <' + msgfrom + '> ' + text)
-    
+    msgfrom = unicode(msgfrom, "UTF-8")
+    target = unicode(target, "UTF-8")
+    text = unicode(text, "UTF-8")
+
+    print(u"{0}: <{1}> {2}".format(target, msgfrom, text))
+
     ## Check for commands (!<command>) 
-    if (text.startswith('!')):
-        
-        command = text.split(' ',1)[0]
-        
-        if command == "!sites":
+    if text.startswith("!"):
+        command = text.split(u" ",1)[0]
+        if command == u"!sites":
             sites = db.list_last_sites()
             for site in sites:
-                connection.send_msg(target, str(site[0]))
+                connection.send_msg(target, unicode(site[0]))
                 time.sleep(send_lag)
     
     else:
         ## Parse for url's
         for word in text.split():
-            if "http" in word:
-                db.add_website(msgfrom, target, word)
-
+            if u"http" in word:
+                res, out = db.add_website(msgfrom, target, word)
+                print (res, out)
+                if res == u"repost":
+                    connection.send_msg(target, "reposts of reposts \
+                            of reposts...")
 
 def main():
     """
@@ -72,8 +77,13 @@ def main():
     con.add_on_raw_handler(lambda con, msg: None)
     con.add_on_connected_handler(connectHandler)
     con.add_on_text_handler(textHandler)
-    con.add_on_join_handler(lambda con, who, chan: print("{0} has joined {1}".format(who, chan)))
-    con.add_on_part_handler(lambda con, who, chan: print("{0} has left {1}".format(who, chan)))
+    con.add_on_join_handler(
+            lambda con, who, chan:
+                print("{0} has joined {1}".format(who, chan))
+            )
+    con.add_on_part_handler(
+            lambda con, who, chan:
+                print("{0} has left {1}".format(who, chan)))
 
     con.connect()
     con.process()
