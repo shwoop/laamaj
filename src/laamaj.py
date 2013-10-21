@@ -30,20 +30,23 @@ def connectHandler(connection, server):
 
 
 def textHandler(connection, msgfrom, target, text):
-    msgfrom = unicode(msgfrom, "UTF-8")
-    target = unicode(target, "UTF-8")
-    text = unicode(text, "UTF-8")
+    msgfrom = unicode(msgfrom)
+    target = unicode(target)
+    text = unicode(text)
 
     print(u"{0}: <{1}> {2}".format(target, msgfrom, text))
 
     ## Check for commands (!<command>) 
     if text.startswith("!"):
+        pass
+        """
         command = text.split(u" ",1)[0]
         if command == u"!sites":
             sites = db.list_last_sites()
             for site in sites:
                 connection.send_msg(target, unicode(site[0]))
                 time.sleep(send_lag)
+        """
     
     else:
         ## Parse for url's

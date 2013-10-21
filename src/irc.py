@@ -5,7 +5,7 @@ import string
 import sys
 import time
 
-IRCVERSION = 'python Irc'
+IRCVERSION = u'python Irc'
 DEBUG_IRC = False 
 
 class Irc:
@@ -126,38 +126,38 @@ class Irc:
         return False
     
     def join(self, channel):
-        self.send('JOIN ' + channel)
+        self.send(u'JOIN ' + channel)
 
     def part(self, channel):
-        self.send('PART ' + channel)
+        self.send(u'PART ' + channel)
 
     def send_msg(self, target, text):
-        self.send('PRIVMSG ' + target + ' :' + text)
+        self.send(u'PRIVMSG ' + target + u' :' + text)
 
     def send_ctcp_msg(self, target, command):
-        reply = 'NOTICE ' + target + ' :' + chr(1) + command + chr(1)
+        reply = u'NOTICE ' + target + u' :' + chr(1) + command + chr(1)
         self.send(reply)
 
     def send(self, text):
         if (DEBUG_IRC):
-            print('-> ' + text)
-        self.s.send(text + '\r\n')
+            print(u'-> ' + text)
+        self.s.send(text + u'\r\n')
 
     def stateConnect(self):
         try:
-            print('Connecting to %s' % self.server)
+            print(u'Connecting to %s' % self.server)
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.s.connect((self.server, self.port))
             self.state = self.stateConnecting
         except socket.error:
-            print('Unable to connect to %s' % self.server)
+            print(u'Unable to connect to %s' % self.server)
             self.s.close()
             self.state = self.stateReconnect
         
     def stateConnecting(self):
-        self.send("NICK %s" % self.nick)
-        self.send("USER %s %s %s :%s" % (self.ident, self.server, self.nick, self.realname))
-        self.readbuf = ""
+        self.send(u"NICK %s" % self.nick)
+        self.send(u"USER %s %s %s :%s" % (self.ident, self.server, self.nick, self.realname))
+        self.readbuf = u""
 
         self.connected = False
 
@@ -166,7 +166,7 @@ class Irc:
         try:
             while not self.connected:
                 self.readbuf = self.readbuf + self.s.recv(2048)
-                temp = string.split(self.readbuf, '\n');
+                temp = string.split(self.readbuf, u'\n');
                 self.readbuf = temp.pop();
 
                 for line in temp:
@@ -195,53 +195,54 @@ class Irc:
             #ensure we only parse full lines.  We have no
             #guarantee that each chunk of data coming in
             #will be in any way complete...
-            self.readbuf = self.readbuf + self.s.recv(2048)
-            temp = string.split(self.readbuf, '\n');
+            self.readbuf = self.readbuf + unicode(self.s.recv(2048),
+                                                                u"utf8")
+            temp = unicode.split(self.readbuf, u"\n");
             self.readbuf = temp.pop();
             
             for line in temp:
-                line = string.rstrip(line)
+                line = unicode.rstrip(line)
                 fullline = line
-                line = string.split(line)
+                line = unicode.split(line)
 
-                if (line[0] == 'PING'):
-                    self.send('PONG %s' % line[1])
+                if (line[0] == u'PING'):
+                    self.send(u'PONG %s' % line[1])
 
                 self.__on_raw(fullline)
                 
-                msgfrom = line[0].split('!')[0].strip(':')
+                msgfrom = line[0].split(u'!')[0].strip(u':')
 
-                if (line[1] == 'PRIVMSG'):
+                if (line[1] == u'PRIVMSG'):
                     target = line[2]
                     if (target == self.nick):
-                        target = ''
-                    msg = ' '.join(line[3:])[1:]    
+                        target = u''
+                    msg = u' '.join(line[3:])[1:]    
                     self.__on_text(msgfrom, target, msg)
                 
-                if (line[1] == 'JOIN'):
+                if (line[1] == u'JOIN'):
                     channel = line[2][1:]
                     self.__on_join(msgfrom, channel)
 
-                if (line[1] == 'PART'):
+                if (line[1] == u'PART'):
                     channel = line[2]
                     self.__on_part(msgfrom, channel)
 
-                if (line[1] == 'QUIT'):
-                    msg = ' '.join(line[2:])[1:]
+                if (line[1] == u'QUIT'):
+                    msg = u' '.join(line[2:])[1:]
                     self.__on_quit(msgfrom, msg)
 
         except socket.error:
-            print('Lost connection to %s' % self.server)
+            print(u'Lost connection to %s' % self.server)
             self.s.close()
             self.state = self.stateReconnect
 
     def stateDisconnected(self):
-        print('Disconnected from %s' % self.server)
+        print(u'Disconnected from %s' % self.server)
         self.state = self.stateReconnect
 
     def stateReconnect(self):
         time.sleep(self.reconnectWait)
-        print('Reconnecting to %s' % self.server)
+        print(u'Reconnecting to %s' % self.server)
         self.state = self.stateConnect
 
     def process(self):
