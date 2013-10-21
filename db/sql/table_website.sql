@@ -1,7 +1,6 @@
 --
 --  CREATE TABLE TO STORE ANY URLS POSTED
 --
-
 CREATE TABLE websites (
   ws_id INTEGER PRIMARY KEY AUTOINCREMENT,
   ws_date DATE,
@@ -11,4 +10,5 @@ CREATE TABLE websites (
   ws_localfile VARCHAR(500)
 )
 /
-
+CREATE INDEX wsindex ON websites(ws_url ASC)
+/
