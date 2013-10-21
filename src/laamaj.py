@@ -21,6 +21,7 @@ send_lag = 1
 db = False
 options = {}
 channels = []
+ignorelist = [u'jamaal']
 
 
 def connectHandler(connection, server):
@@ -35,6 +36,10 @@ def textHandler(connection, msgfrom, target, text):
     text = unicode(text)
 
     print(u'{0}: <{1}> {2}'.format(target, msgfrom, text))
+
+    if msgfrom in ignorelist:
+        print(u'Ignoring')
+        return
 
     ## Check for commands (!<command>) 
     if text.startswith(u'!'):
