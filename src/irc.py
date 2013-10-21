@@ -30,7 +30,8 @@ class Irc:
         self.wantNick = nick
 
     def connect(self):
-        self.__connect_to_server(self.server, self.port, self.nick, self.ident, self.realname)
+        self.__connect_to_server(self.server, self.port, self.nick,
+                self.ident, self.realname)
         self.state = self.stateConnect
 
     def __connect_to_server(self, server, port, nick, ident, realname):
@@ -116,7 +117,7 @@ class Irc:
 
     def __on_quit(self, who, message):
         if who == self.wantNick:
-            self.send('NICK ' + self.wantNick)
+            self.send(u'NICK ' + self.wantNick)
         self.__call_on_quit_handlers(who, message)
 
     def __is_ctcp_msg(self, msg):
@@ -155,9 +156,10 @@ class Irc:
             self.state = self.stateReconnect
         
     def stateConnecting(self):
-        self.send(u"NICK %s" % self.nick)
-        self.send(u"USER %s %s %s :%s" % (self.ident, self.server, self.nick, self.realname))
-        self.readbuf = u""
+        self.send(u'NICK %s' % self.nick)
+        self.send(u'USER %s %s %s :%s' % (self.ident, self.server,
+            self.nick, self.realname))
+        self.readbuf = u''
 
         self.connected = False
 
@@ -165,7 +167,8 @@ class Irc:
 
         try:
             while not self.connected:
-                self.readbuf = self.readbuf + self.s.recv(2048)
+                self.readbuf = (self.readbuf +
+                        unicode(self.s.recv(2048), u'ISO-8859-1'))
                 temp = string.split(self.readbuf, u'\n');
                 self.readbuf = temp.pop();
 
@@ -174,18 +177,19 @@ class Irc:
                     fullline = line
                     line = string.split(line)
 
-                    if fullline.find("Nickname is already in use") != -1:
+                    if fullline.find(u'Nickname is already in use') != -1:
                         self.nick = self.wantNick + str(nickTemp)
                         nickTemp += 1
-                        self.send("NICK %s" % self.nick)
-                        self.send("USER %s %s %s :%s" % (self.ident, self.server, self.nick, self.realname))
+                        self.send(u'NICK %s' % self.nick)
+                        self.send(u'USER %s %s %s :%s' % (self.ident,
+                            self.server, self.nick, self.realname))
 
-                    if (line[1] == '001'):
+                    if (line[1] == u'001'):
                         self.connected = True
                         self.__on_connected(self.server)
                         self.state = self.stateConnected
         except socket.error:
-            print('Lost connection to %s' % self.server)
+            print(u'Lost connection to %s' % self.server)
             self.s.close()
             self.state = self.stateReconnect
 
@@ -196,8 +200,8 @@ class Irc:
             #guarantee that each chunk of data coming in
             #will be in any way complete...
             self.readbuf = (self.readbuf +
-                unicode(self.s.recv(2048),u"ISO-8859-1"))
-            temp = unicode.split(self.readbuf, u"\n");
+                unicode(self.s.recv(2048), u'ISO-8859-1'))
+            temp = unicode.split(self.readbuf, u'\n');
             self.readbuf = temp.pop();
             
             for line in temp:

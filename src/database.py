@@ -12,24 +12,24 @@ import hashlib
 from urllib import urlretrieve
 
 def cur2lst(sqlite3cursor):
-    """ flip sqlite3 cursor's into lists before returning them """
+    ''' flip sqlite3 cursor's into lists before returning them '''
     try:
         output = [x for x in sqlite3cursor]
     except TypeError, e:
-        print "cur2lst: {0}".format(e.strerror)
+        print u'cur2lst: {0}'.format(e.strerror)
         output = []
     
     return output
 
 
 class Database:
-    """
+    '''
     Database Class
     Connects on init and has add_website and list_last_sites for adding
     or reading a website from the database.
-    """
-    def __init__(self, care_about_threads=False, database=u"../db/laamaj.db",
-            imgdir = u"../db/img/"):
+    '''
+    def __init__(self, care_about_threads=False, database=u'../db/laamaj.db',
+            imgdir = u'../db/img/'):
         ## Create a database connection.
         self._con = None
         self._cur = None
@@ -39,16 +39,14 @@ class Database:
 
         self._imgdir = imgdir
 
-        self._sql_insert_website = u"INSERT INTO websites \
+        self._sql_insert_website = u'''INSERT INTO websites \
             (ws_date, ws_user, ws_chan, ws_url, ws_localfile) \
-            VALUES (date('now'), ?, ?, ?, ?);"
-        self._sql_retreive_website = u"SELECT ws_user||\' - \'||ws_chan\
+            VALUES (date('now'), ?, ?, ?, ?);'''
+        self._sql_retreive_website = u'''SELECT ws_user||\' - \'||ws_chan\
             ||\' - \'||ws_url FROM websites WHERE ws_id > (SELECT max(ws_id) \
-            FROM websites) - ? ORDER BY ws_id DESC;"
-        #self._sql_duplicate_check = u"SELECT Count(*) FROM websites WHERE \
-        #        ws_url = ?;"
-        self._sql_duplicate_check = u"SELECT ws_user FROM websites WHERE \
-                ws_url = ? ORDER BY ws_id ASC;"
+            FROM websites) - ? ORDER BY ws_id DESC;'''
+        self._sql_duplicate_check = u'''SELECT ws_user FROM websites WHERE \
+                ws_url = ? ORDER BY ws_id ASC;'''
 
     def __del__(self):
         self._close()
@@ -59,9 +57,9 @@ class Database:
             self._con = sqlite3.connect(self._db,
                 check_same_thread=self._care_about_threads)
             self._cur = self._con.cursor()
-            print("Connected to "+self._db)
+            print(u'Connected to '+self._db)
         except sqlite3.Error, e:
-            print("Error : "+e.args[0])
+            print(u'Error : '+e.args[0])
 
 
     def _close(self):
@@ -69,9 +67,9 @@ class Database:
             self._con.close()
             self._con = None
             self._cur = None
-            print("connection closed")
+            print(u'connection closed')
         else:
-            print("no open connection")
+            print(u'no open connection')
             self._cur = None
 
 
@@ -85,29 +83,29 @@ class Database:
 
 
     def add_website(self, user, chan, website):
-        print u"adding website"
+        print u'adding website'
 
         ## Linkpolis
         speedy = self._cur.execute(self._sql_duplicate_check,
                 (website,)).fetchone()
         if speedy:
-              status = u"repost"
+              status = u'repost'
               output = [speedy[0]]
 
         else:
             ## image check 
-            exts = [u".jpg", u".jpeg", u".png", u".gif"]
+            exts = [u'.jpg', u'.jpeg', u'.png', u'.gif']
 
             if [ext for ext in exts if website.endswith(ext)]:
-                origfile = website.split(u"/").pop()
-                print u"Original filename: {0}".format(origfile)
+                origfile = website.split(u'/').pop()
+                print u'Original filename: {0}'.format(origfile)
                 localfilename = hashlib.md5(origfile).hexdigest() + ext[0]
                 urlretrieve(website, self._imgdir + localfilename)
-                status = u"image"
+                status = u'image'
 
             else:
-                localfilename = u""
-                status = u"site"
+                localfilename = u''
+                status = u'site'
 
             ## update the db
             output = self._cur.execute(
@@ -120,7 +118,7 @@ class Database:
 
 
     def list_last_sites(self, numero=5):
-        print(u"output sites")
+        print(u'output sites')
         try:
             print((unicode(numero)))
             data = self._cur.execute(
@@ -131,11 +129,11 @@ class Database:
             if data:
                 print data
             else:
-                data = [u"No Results"]
+                data = [u'No Results']
 
         except sqlite3.Error, e:
-            print "Error : ",e.args[0]
-            data = ["Error : {error}".format(error=e.args[0])]
+            print u'Error : ',e.args[0]
+            data = [u'Error : {error}'.format(error=e.args[0])]
 
         return data
 
@@ -147,8 +145,8 @@ class Database:
 
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     t_db = Database()
     t_db.list_last_sites()
     #t_db.add_website('test','test','http://www.test.com/image.jpg')
-    t_db.add_website('test','test','http://www.test.com/')
+    t_db.add_website(u'test',u'test',u'http://www.test.com/')

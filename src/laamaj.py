@@ -24,7 +24,7 @@ channels = []
 
 
 def connectHandler(connection, server):
-    print(u"Connected to {0}".format(server))
+    print(u'Connected to {0}'.format(server))
     for channel in channels:
            connection.join(channel)
 
@@ -34,50 +34,50 @@ def textHandler(connection, msgfrom, target, text):
     target = unicode(target)
     text = unicode(text)
 
-    print(u"{0}: <{1}> {2}".format(target, msgfrom, text))
+    print(u'{0}: <{1}> {2}'.format(target, msgfrom, text))
 
     ## Check for commands (!<command>) 
-    if text.startswith("!"):
+    if text.startswith(u'!'):
         pass
-        """
-        command = text.split(u" ",1)[0]
-        if command == u"!sites":
+        '''
+        command = text.split(u' ',1)[0]
+        if command == u'!sites':
             sites = db.list_last_sites()
             for site in sites:
                 connection.send_msg(target, unicode(site[0]))
                 time.sleep(send_lag)
-        """
+        '''
     
     else:
         ## Parse for url's
         for word in text.split():
-            if u"http" in word:
+            if u'http' in word:
                 res, out = db.add_website(msgfrom, target, word)
                 print (res, out)
-                if res == u"repost":
-                    msg = u"{0}: {1} beat you to it.".format(msgfrom,
+                if res == u'repost':
+                    msg = u'{0}: {1} beat you to it.'.format(msgfrom,
                                                         out[0])
                     connection.send_msg(target, msg)
 
 def main():
-    """
+    '''
     Entry point to Laamaj
-    """
+    '''
     
     global options
     global channels
     global db
 
     options = get_parameters()
-    channels = ['#{0}'.format(options['CHANNEL'])]
+    channels = [u'#{0}'.format(options[u'CHANNEL'])]
 
     db = database.Database()
 
-    con = irc.Irc(options['SERVER'],
+    con = irc.Irc(options[u'SERVER'],
         6667,
-        options['NICK'],
-        options['IDENT'],
-        options['REALNAME']
+        options[u'NICK'],
+        options[u'IDENT'],
+        options[u'REALNAME']
         )
     
     con.add_on_raw_handler(lambda con, msg: None)
@@ -85,15 +85,15 @@ def main():
     con.add_on_text_handler(textHandler)
     con.add_on_join_handler(
             lambda con, who, chan:
-                print("{0} has joined {1}".format(who, chan))
+                print(u'{0} has joined {1}'.format(who, chan))
             )
     con.add_on_part_handler(
             lambda con, who, chan:
-                print("{0} has left {1}".format(who, chan)))
+                print(u'{0} has left {1}'.format(who, chan)))
 
     con.connect()
     con.process()
 
 
-if __name__ == '__main__':
+if __name__ == u'__main__':
     main()
