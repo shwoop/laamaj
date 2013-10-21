@@ -195,8 +195,8 @@ class Irc:
             #ensure we only parse full lines.  We have no
             #guarantee that each chunk of data coming in
             #will be in any way complete...
-            self.readbuf = self.readbuf + unicode(self.s.recv(2048),
-                                                                u"utf8")
+            self.readbuf = (self.readbuf +
+                unicode(self.s.recv(2048),u"ISO-8859-1"))
             temp = unicode.split(self.readbuf, u"\n");
             self.readbuf = temp.pop();
             
