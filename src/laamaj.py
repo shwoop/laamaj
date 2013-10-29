@@ -9,6 +9,7 @@ from __future__ import print_function   ## for lambda print
 import time
 import sys
 import sqlite3
+import re
 
 ## local imports
 import irc
@@ -31,10 +32,6 @@ def connectHandler(connection, server):
 
 
 def textHandler(connection, msgfrom, target, text):
-    msgfrom = unicode(msgfrom)
-    target = unicode(target)
-    text = unicode(text)
-
     print(u'{0}: <{1}> {2}'.format(target, msgfrom, text))
 
     if msgfrom in ignorelist:
@@ -56,11 +53,12 @@ def textHandler(connection, msgfrom, target, text):
     else:
         ## Parse for url's
         for word in text.split():
-            if u'http' in word:
+            #if u'http' in word:
+            if re.search(u'\Ahttps?://.*',word):
                 res, out = db.add_website(msgfrom, target, word)
                 print (res, out)
                 if res == u'repost':
-                    msg = u'{0}: {1} beat you to it.'.format(msgfrom,
+                    msg = u'{0}: The cycle continues...'.format(msgfrom,
                                                         out[0])
                     connection.send_msg(target, msg)
 
