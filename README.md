@@ -16,8 +16,8 @@ usage [/src/laamaj.py]
 
     optional arguments:
       -h, --help            show this help message and exit
-      -t, --test            Engage test mode (join EFNET #laamajtest
+      -t, --test            Engage test mode (join EFNET #laamajtest)
       -c CONFIG, --config CONFIG
-                 Specify config file (default .../laamaj/config.cfg
+                 Specify config file (default .../laamaj/config.cfg)
 
 [WTFPL]: https://raw.github.com/shwoop/laamaj/master/LICENSE
