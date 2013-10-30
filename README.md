@@ -24,7 +24,9 @@ Special thanks
 ---
 
 [Lou Reed] (RIP): You were vicious.
+
 [Barack Obama]: We probably could have.
+
 [T. Mallet]: Fun times.
 
 
