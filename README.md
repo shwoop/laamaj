@@ -1,25 +1,23 @@
-LAAMAJ
+蟒蛇 LAAMAJ 蟒蛇
 ======
 
->Python IRC Bot Project
+Python IRC Bot Project
+---
 
-Laamaj is a toy project to get some experience with Python, Git and Github.
-The Intention is to expand it with new technologies as and when we decide to play with it.
+Laamaj is a toy project to make an IRC bot to gain experience in python and mess around with related technologies.
 
-Currently hosted on bitg.bummedinthegob.co.uk
+released under [WTFPL]
 
->Dependencies
-    
-[python 2.7][1]
+usage [/src/laamaj.py]
+---
+    usage: laamaj.py [-h] [-t] [-c CONFIG]
 
-[sqlite3][2]
+    Laamaj IRC Bot Grabber of links/pictures and hopefully shower of them
 
->ToDo
+    optional arguments:
+      -h, --help            show this help message and exit
+      -t, --test            Engage test mode (join EFNET #laamajtest
+      -c CONFIG, --config CONFIG
+                 Specify config file (default .../laamaj/config.cfg
 
- * Implement a basic web portal to host the content we're storing up. (probably [flask][3])
- * Add [mongodb][4] support
-
-[1]: http://www.python.org/
-[2]: http://www.sqlite.org/
-[3]: http://flask.pocoo.org/
-[4]: http://www.mongodb.org/
+[WTFPL]: https://raw.github.com/shwoop/laamaj/master/LICENSE
