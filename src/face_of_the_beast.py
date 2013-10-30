@@ -1,9 +1,14 @@
 #!/usr/bin/python
 # vim: set fileencoding=utf-8 :
 '''
-Lamaaj web portal
+The face of Laamaj
 
-Stand along web portal using the laamaj resources.
+ie. the web portal
+
+Expect basic flask with infinite scroll image page.
+Please note future tense
+
+Currently, silly-buggers code.
 '''
 
 import database
