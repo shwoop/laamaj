@@ -1,7 +1,4 @@
 *.pyc
 *.db
 *.db.bk
-*.jpg
-*.jpeg
-*.gif
-*.png
+db/img/*

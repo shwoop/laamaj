@@ -1,12 +1,18 @@
 <!doctype html>
 <html>
 <head>
-    <title>Tugrik Toilet Goblins</title>
+  <title>Tugrik Toilet Goblins</title>
 </head>
 <body>
-<center>
-    <img src="{{ url_for('static', filename='banner.jpg') }}">
-</center>
-    <!-- nothing to see here -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <center>
+    <img src="{{ url_for('static', filename='banner.jpg') }}"><br />
+    <a href="https://github.com/shwoop/laamaj/"> LAAMAJ </a><br /><br />
+    {% for item in urllist %}
+      {{ item[0] }} : <a href="{{ item[1] }}">{{ item[1] }}</a><br />
+    {% endfor %}
+    </ul>
+  </center>
+  <!-- nothing to see here -->
 </body>
 </html>
