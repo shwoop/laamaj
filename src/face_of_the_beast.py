@@ -7,9 +7,10 @@ Stand along web portal using the laamaj resources.
 '''
 
 import database
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, session
 
 app = Flask(__name__)
+app.secret_key = u'herpy derpy doo'
 
 _db = database.Database()
 
@@ -43,19 +44,46 @@ def test():
 
 @app.route(u'/test2')
 def test2():
-    results = _db.exe(u'select count(*) from websites;')
+    ''' toying with db access '''
+    results = _db.exe(u'select count(*) from websites')
     num_of_websites = u'There are these many websites store in laamaj : '
     for result in results:
         num_of_websites += str(result[0])
     results = _db.exe(
-            u'select count(*) from websites where ws_localfile != '';')
+            u"select count(*) from websites where ws_localfile != ''")
     num_of_images = u'There are thes many images stored in laamaj : '
     for result in results:
         num_of_images += str(result[0])
     output = num_of_websites + u'<br />' + num_of_images
     return output
 
+@app.route(u'/ttg')
+def ttg():
+    ''' Tugrek Toilet Goblins: list laamaj contents '''
+    output = render_template(u'main.htm')
+    return output
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
-    #app.run(host='0.0.0.0', port=80, debug=True)
+@app.route(u'/sess')
+def sess():
+    ''' toying with sessions '''
+    if u'count' in session:
+        output = u'count is in session: '
+        count = unicode(session[u'count'])
+        output += count
+        count = int(count) + 1
+    else:
+        output = u'count is not in session'
+        count = 0
+    session[u'count'] = count
+    return output
+
+@app.route(u'/unsess')
+def unsess():
+    ''' reset /sess session '''
+    session.pop(u'count', None)
+    return u'reset count'
+
+
+if __name__ == u'__main__':
+    #app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80, debug=True)
