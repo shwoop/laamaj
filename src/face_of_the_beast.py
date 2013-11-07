@@ -7,17 +7,18 @@ Stand along web portal using the laamaj resources.
 '''
 
 import database
-from flask import Flask, render_template, url_for, session
-
+from flask import Flask, render_template, url_for, session, jsonify
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-
 
 app = Flask(__name__)
 app.secret_key = u'herpy derpy doo'
 
 _db = database.Database()
+
+REC_PER_PAGE = 10
+FETCH_RECORDS_SQL = u'select ws_user, ws_url from websites where ws_id between {0} and {1} order by ws_id desc'
 
 @app.route(u'/')
 def relay_bitg():
@@ -28,8 +29,11 @@ def relay_bitg():
 @app.route(u'/ttg')
 def ttg():
     ''' Tugrek Toilet Goblins: list laamaj contents '''
-    results = _db.exe(u'select ws_user user, ws_url url from websites order by ws_id desc')
+    head = int(_db.exe(u'select max(ws_id) from websites')[0][0])
+    tail = head - REC_PER_PAGE if head - REC_PER_PAGE > 0 else 0
+    results = _db.exe(FETCH_RECORDS_SQL.format(tail, head))
     output = render_template(u'main.htm', urllist=results)
+    session[u'lastrecord'] = tail
     return output
 
 @app.route(u'/cert')
@@ -38,34 +42,27 @@ def certificate():
     output = render_template(u'cert.htm')
     return output
 
-@app.route(u'/sess')
-def sess():
-    ''' toying with sessions '''
-    if u'count' in session:
-        output = u'count is in session: '
-        count = unicode(session[u'count'])
-        output += count
-        count = int(count) + 1
-    else:
-        output = u'count is not in session'
-        count = 0
-    session[u'count'] = count
-    return output
-
-@app.route(u'/unsess')
-def unsess():
-    ''' reset /sess session '''
-    session.pop(u'count', None)
-    return u'reset count'
-
+@app.route(u'/_more')
+def _more():
+    ''' Restful ajax call to return jason of next X records. '''
+    if u'lastrecord' not in session:
+        return jsonify(result = u'Something is Fucked<br>')
+    fr = int(session[u'lastrecord']) - 1
+    nlr = fr - REC_PER_PAGE if fr - REC_PER_PAGE > 0 else 0
+    print u'fr: {0}, nlr: {1}.'.format(fr, nlr)
+    results = _db.exe(FETCH_RECORDS_SQL.format(nlr, fr))
+    output = u''
+    for usr, url in results:
+        output += u'{0}: <a href="{1}">{1}</a><br>'.format(usr, url)
+    session[u'lastrecord'] = nlr
+    return jsonify(result = output,
+            end = nlr == 0)
 
 if __name__ == u'__main__':
-
+    ''' Launch web service pointing to the app. '''
     https_server = HTTPServer(WSGIContainer(app),
         ssl_options={u'certfile': u'kyz/cert.pem',
             u'keyfile': u'kyz/key.pem'})
     https_server.listen(443)
     IOLoop.instance().start()
-
-    #app.run(host='0.0.0.0', port=80)
     #app.run(host='0.0.0.0', port=80, debug=True)
