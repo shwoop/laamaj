@@ -2,3 +2,4 @@
 *.db
 *.db.bk
 db/img/*
+key.pem
