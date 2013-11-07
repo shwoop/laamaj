@@ -18,7 +18,8 @@ app.secret_key = u'herpy derpy doo'
 _db = database.Database()
 
 REC_PER_PAGE = 10
-FETCH_RECORDS_SQL = u'select ws_user, ws_url from websites where ws_id between {0} and {1} order by ws_id desc'
+FETCH_RECORDS_SQL = u'select ws_user, ws_url from websites where \
+ws_id between {0} and {1} order by ws_id desc'
 
 @app.route(u'/')
 def relay_bitg():
@@ -42,6 +43,10 @@ def certificate():
     output = render_template(u'cert.htm')
     return output
 
+def _format_link(user, url):
+    ''' return url format for each record displaying user and url. '''
+    return u'{0}: <a href="{1}">{1}</a><br>'.format(user, url)
+
 @app.route(u'/_more')
 def _more():
     ''' Restful ajax call to return jason of next X records. '''
@@ -51,9 +56,8 @@ def _more():
     nlr = fr - REC_PER_PAGE if fr - REC_PER_PAGE > 0 else 0
     print u'fr: {0}, nlr: {1}.'.format(fr, nlr)
     results = _db.exe(FETCH_RECORDS_SQL.format(nlr, fr))
-    output = u''
-    for usr, url in results:
-        output += u'{0}: <a href="{1}">{1}</a><br>'.format(usr, url)
+    outlist = [_format_link(usr, url) for usr, url in results]
+    output = u''.join(outlist)
     session[u'lastrecord'] = nlr
     return jsonify(result = output,
             end = nlr == 0)
