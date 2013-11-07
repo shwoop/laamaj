@@ -140,7 +140,7 @@ class Database:
 
     def exe(self, toexecute):
         tmp = cur2lst(self._cur.execute(toexecute))
-        print tmp
+        #print tmp
         return tmp
 
 
