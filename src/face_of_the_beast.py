@@ -32,6 +32,12 @@ def ttg():
     output = render_template(u'main.htm', urllist=results)
     return output
 
+@app.route(u'/cert')
+def certificate():
+    ''' present ssl certificate. '''
+    output = render_template(u'cert.htm')
+    return output
+
 @app.route(u'/sess')
 def sess():
     ''' toying with sessions '''
@@ -54,8 +60,11 @@ def unsess():
 
 
 if __name__ == u'__main__':
-    http_server = HTTPServer(WSGIContainer(app))
-    http_server.listen(80)
+
+    https_server = HTTPServer(WSGIContainer(app),
+        ssl_options={u'certfile': u'kyz/cert.pem',
+            u'keyfile': u'kyz/key.pem'})
+    https_server.listen(443)
     IOLoop.instance().start()
 
     #app.run(host='0.0.0.0', port=80)
