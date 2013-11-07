@@ -27,6 +27,7 @@ ignorelist = [u'jamaal']
 
 def connectHandler(connection, server):
     print(u'Connected to {0}'.format(server))
+    #[connection.join(channel) for channel in channels]
     for channel in channels:
            connection.join(channel)
 

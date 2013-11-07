@@ -140,7 +140,6 @@ class Database:
 
     def exe(self, toexecute):
         tmp = cur2lst(self._cur.execute(toexecute))
-        print tmp
         return tmp
 
 
@@ -148,5 +147,7 @@ class Database:
 if __name__ == '__main__':
     t_db = Database()
     t_db.list_last_sites()
-    #t_db.add_website('test','test','http://www.test.com/image.jpg')
+    t_db.exe(1)
+    t_db.exe(u'select count(*) from websites')
+    t_db.add_website('test','test','http://www.test.com/image.jpg')
     t_db.add_website(u'test',u'test',u'http://www.test.com/')
