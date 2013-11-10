@@ -67,6 +67,9 @@ if __name__ == u'__main__':
     https_server = HTTPServer(WSGIContainer(app),
         ssl_options={u'certfile': u'kyz/cert.pem',
             u'keyfile': u'kyz/key.pem'})
-    https_server.listen(443)
+
+    ## rather than bind to 443 using sudo, set up iptables redirect from 442 to 8869 and run as user
+    https_server.listen(8869)
     IOLoop.instance().start()
+
     #app.run(host='0.0.0.0', port=80, debug=True)
