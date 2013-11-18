@@ -7,7 +7,7 @@ Stand along web portal using the laamaj resources.
 '''
 
 import database
-from flask import Flask, render_template, url_for, session, jsonify
+from flask import Flask, render_template, url_for, session, jsonify, request
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -26,6 +26,16 @@ def relay_bitg():
     ''' Forward users accessing the domain to the youtube video. '''
     return render_template(u'redirect.htm',
         target=u'http://www.youtube.com/watch?v=my2NVhUjekA')
+
+@app.route("/ip_echoj", methods=["GET"])
+def ip_echo_json():
+    ''' echo client ip address as json'''
+    return jsonify({'ip': request.remote_addr}), 200
+
+@app.route("/ip_echo", methods=["GET"])
+def ip_echo():
+    ''' echo client ip address '''
+    return request.remote_addr, 200
 
 @app.route(u'/ttg')
 def ttg():
@@ -68,7 +78,8 @@ if __name__ == u'__main__':
         ssl_options={u'certfile': u'kyz/cert.pem',
             u'keyfile': u'kyz/key.pem'})
 
-    ## rather than bind to 443 using sudo, set up iptables redirect from 442 to 8869 and run as user
+    ## rather than bind to 443 using sudo
+    ## set up iptables redirect from 442 to 8869 and run as user
     https_server.listen(8869)
     IOLoop.instance().start()
 
