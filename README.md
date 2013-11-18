@@ -20,17 +20,5 @@ Usage [/src/laamaj.py]
       -c CONFIG, --config CONFIG
                  Specify config file (default .../laamaj/config.cfg)
 
-Special thanks
----
-
-[Lou Reed] (RIP): You were vicious.
-
-[Barack Obama]: We probably could have.
-
-[T. Mallet]: Fun times.
-
-
 [WTFPL]: https://raw.github.com/shwoop/laamaj/master/LICENSE
-[Lou Reed]: http://www.loureed.com/
-[Barack Obama]: www.barackobama.com
-[T. Mallet]: http://brillianttv.co.uk/timmymallett/index.php
+
