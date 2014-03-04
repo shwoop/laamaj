@@ -37,9 +37,15 @@ def terminal_echo(connection, msgfrom, target, text):
     print(u'{0}: <{1}> {2}'.format(target, msgfrom, text))
 
 def get_url_title(url):
-    page = urllib2.urlopen(url)
-    tree = lxml.html.parse(page)
-    title = tree.findtext('.//title')
+    try:
+        page = urllib2.urlopen(url.encode(u'utf-8'))
+        tree = lxml.html.parse(page)
+        title = tree.findtext(u'.//title')
+    except urllib2.URLError:
+        title = u'URLError'
+    except urllib2.HTTPError:
+        title = u'HTTPError'
+
     return title
 
 @laamaj.add_on_text
