@@ -5,26 +5,27 @@
 ##
 
 ## standard library imports
-from __future__ import print_function   ## for lambda print
-import time
-import sys
-import sqlite3
-import re
+#from __future__ import print_function   ## for lambda print
+import time, sys, sqlite3, re
 
 ## local imports
-import irc
-#import message
-import database
+import irc, database
 from config import get_parameters
 
-## globals
 send_lag = 1
-db = False
-options = {}
-channels = []
 ignorelist = [u'jamaal']
 
+options = get_parameters()
+channels = [u'#{0}'.format(options[u'CHANNEL'])]
+db = database.Database()
+laamaj = irc.Irc(options[u'SERVER'],
+                6667,
+                options[u'NICK'],
+                options[u'IDENT'],
+                options[u'REALNAME'])
 
+
+@laamaj.add_on_connected
 def connectHandler(connection, server):
     print(u'Connected to {0}'.format(server))
     #[connection.join(channel) for channel in channels]
@@ -32,6 +33,7 @@ def connectHandler(connection, server):
            connection.join(channel)
 
 
+@laamaj.add_on_text
 def textHandler(connection, msgfrom, target, text):
     print(u'{0}: <{1}> {2}'.format(target, msgfrom, text))
 
@@ -63,41 +65,5 @@ def textHandler(connection, msgfrom, target, text):
                                                         out[0])
                     connection.send_msg(target, msg)
 
-def main():
-    '''
-    Entry point to Laamaj
-    '''
-    
-    global options
-    global channels
-    global db
-
-    options = get_parameters()
-    channels = [u'#{0}'.format(options[u'CHANNEL'])]
-
-    db = database.Database()
-
-    con = irc.Irc(options[u'SERVER'],
-        6667,
-        options[u'NICK'],
-        options[u'IDENT'],
-        options[u'REALNAME']
-        )
-    
-    con.add_on_raw_handler(lambda con, msg: None)
-    con.add_on_connected_handler(connectHandler)
-    con.add_on_text_handler(textHandler)
-    con.add_on_join_handler(
-            lambda con, who, chan:
-                print(u'{0} has joined {1}'.format(who, chan))
-            )
-    con.add_on_part_handler(
-            lambda con, who, chan:
-                print(u'{0} has left {1}'.format(who, chan)))
-
-    con.connect()
-    con.process()
-
-
-if __name__ == u'__main__':
-    main()
+laamaj.connect()
+laamaj.process()

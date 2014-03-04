@@ -33,6 +33,7 @@ class Irc:
         self.__connect_to_server(self.server, self.port, self.nick,
                 self.ident, self.realname)
         self.state = self.stateConnect
+        print 'connected'
 
     def __connect_to_server(self, server, port, nick, ident, realname):
         self.server = server
@@ -41,11 +42,23 @@ class Irc:
         self.ident = ident
         self.realname = realname
     
+    def add_on_raw(self, obj):
+        self.add_on_raw_handler(obj)
+        return obj
+
     def add_on_raw_handler(self, obj):
         self.onRawHandlers.append(obj)
 
+    def add_on_connected(self, obj):
+        self.add_on_connected_handler(obj)
+        return obj
+
     def add_on_connected_handler(self, obj):
         self.onConnectedHandlers.append(obj)
+
+    def add_on_text(self, obj):
+        self.add_on_text_handler(obj)
+        return obj
 
     def add_on_text_handler(self, obj):
         self.onTextHandlers.append(obj)
