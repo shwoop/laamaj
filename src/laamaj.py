@@ -6,7 +6,7 @@
 
 ## standard library imports
 #from __future__ import print_function   ## for lambda print
-import time, sys, sqlite3, re
+import time, sys, sqlite3, re, urllib2, lxml.html
 
 ## local imports
 import irc, database
@@ -32,38 +32,33 @@ def connectHandler(connection, server):
     for channel in channels:
            connection.join(channel)
 
-
 @laamaj.add_on_text
-def textHandler(connection, msgfrom, target, text):
+def terminal_echo(connection, msgfrom, target, text):
     print(u'{0}: <{1}> {2}'.format(target, msgfrom, text))
 
+def get_url_title(url):
+    page = urllib2.urlopen(url)
+    tree = lxml.html.parse(page)
+    title = tree.findtext('.//title')
+    return title
+
+@laamaj.add_on_text
+def url_handling(connection, msgfrom, target, text):
     if msgfrom in ignorelist:
         print(u'Ignoring')
         return
 
-    ## Check for commands (!<command>) 
-    if text.startswith(u'!'):
-        pass
-        '''
-        command = text.split(u' ',1)[0]
-        if command == u'!sites':
-            sites = db.list_last_sites()
-            for site in sites:
-                connection.send_msg(target, unicode(site[0]))
-                time.sleep(send_lag)
-        '''
-    
-    else:
-        ## Parse for url's
-        for word in text.split():
-            #if u'http' in word:
-            if re.search(u'\Ahttps?://.*',word):
-                res, out = db.add_website(msgfrom, target, word)
-                print (res, out)
-                if res == u'repost':
-                    msg = u'{0}: The cycle continues...'.format(msgfrom,
-                                                        out[0])
-                    connection.send_msg(target, msg)
+    for word in text.split():
+        if re.search(u'\Ahttps?://.*', word):
+            
+            title = get_url_title(word)
+            connection.send_msg(target, u'< %s >' % (title))
+
+            res, out = db.add_website(msgfrom, target, word)
+            print (res, out)
+            if res == u'repost':
+                msg = u'{0}: The cycle continues...'.format(msgfrom)
+                connection.send_msg(target, msg)
 
 laamaj.connect()
 laamaj.process()
