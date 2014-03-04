@@ -52,7 +52,8 @@ def url_handling(connection, msgfrom, target, text):
         if re.search(u'\Ahttps?://.*', word):
             
             title = get_url_title(word)
-            connection.send_msg(target, u'< %s >' % (title))
+            if title:
+                connection.send_msg(target, u'< %s >' % (title))
 
             res, out = db.add_website(msgfrom, target, word)
             print (res, out)
