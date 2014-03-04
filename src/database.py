@@ -99,7 +99,7 @@ class Database:
             if [ext for ext in exts if website.endswith(ext)]:
                 origfile = website.split(u'/').pop()
                 print u'Original filename: {0}'.format(origfile)
-                localfilename = hashlib.md5(origfile).hexdigest() + ext[0]
+                localfilename = hashlib.md5(origfile).hexdigest() + ext
                 urlretrieve(website, self._imgdir + localfilename)
                 status = u'image'
 
