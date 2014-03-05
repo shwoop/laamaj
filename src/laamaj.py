@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# vim: set fileencoding=utf-8 :
+# vim: set fileencoding=utf8 :
 ##
 ##     LAAMAJ - IRC BOT
 ##
@@ -27,29 +27,36 @@ laamaj = irc.Irc(options[u'SERVER'],
 
 @laamaj.add_on_connected
 def connectHandler(connection, server):
+    ''' Join channels when connecting. '''
     print(u'Connected to {0}'.format(server))
-    #[connection.join(channel) for channel in channels]
     for channel in channels:
            connection.join(channel)
 
 @laamaj.add_on_text
 def terminal_echo(connection, msgfrom, target, text):
+    ''' echo irc to terminal. '''
     print(u'{0}: <{1}> {2}'.format(target, msgfrom, text))
 
 def get_url_title(url):
+    ''' open url and return the title in utf8. '''
     try:
-        page = urllib2.urlopen(url.encode(u'utf-8'))
+        page = urllib2.urlopen(url.encode(u'utf8'))
         tree = lxml.html.parse(page)
         title = tree.findtext(u'.//title')
+        if type(title) is str:
+            title = title.decode(u'utf8')
     except urllib2.URLError:
         title = u'URLError'
     except urllib2.HTTPError:
         title = u'HTTPError'
+    except:
+        title = u'Foqt'
 
     return title
 
 @laamaj.add_on_text
 def url_handling(connection, msgfrom, target, text):
+    ''' if word is url: fetch it's title and check for reposts '''
     if msgfrom in ignorelist:
         print(u'Ignoring')
         return
@@ -59,7 +66,9 @@ def url_handling(connection, msgfrom, target, text):
             
             title = get_url_title(word)
             if title:
-                connection.send_msg(target, u'< %s >' % (title))
+                mess = u'< %s >' % (title)
+                mess = mess.encode(u'ascii', 'ignore')
+                connection.send_msg(target, mess)
 
             res, out = db.add_website(msgfrom, target, word)
             print (res, out)
