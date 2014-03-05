@@ -67,7 +67,7 @@ def url_handling(connection, msgfrom, target, text):
             title = get_url_title(word)
             if title:
                 mess = u'< %s >' % (title)
-                mess = mess.encode(u'ascii', 'ignore')
+                mess = mess.encode(u'ascii', 'replace')
                 connection.send_msg(target, mess)
 
             res, out = db.add_website(msgfrom, target, word)
