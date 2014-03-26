@@ -1,0 +1,15 @@
+{% extends "base.htm" %}
+{% block title %}Video {{ record }} via {% endblock %}
+{% block head %}
+  {{ super() }}
+  <!--link rel="stylesheet" type="text/css"
+    href="{{ url_for('static', filename='page_links.css') }}"-->
+{% endblock %}
+{% block content %}
+    <p>Please blame {{ user }} for the following video.<br />
+    Uploaded {{ dat }}.</p>
+
+    <iframe id="ytplayer" type="text/html" width="640" height="390"
+        src="{{ url }}?autoplay=1&origin=https://www.bummedinthegob.co.uk/"
+    frameborder="0"/>
+{% endblock %}

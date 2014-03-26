@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Silly shit by silly people  ">
+    <meta name="keywords" content="laamaj, jamaal, links, misc">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %} Bummed In The Gob</title>
+    <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+    {% endblock %}
+  </head>
+  <body>
+    <!--[if lt IE 8]>
+       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <script type=text/javascript>$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};</script>
+    <div id="header">
+      <img src="{{ url_for('static', filename='banner.jpg') }}"><br>
+      <a href="https://github.com/shwoop/laamaj/"> LAAMAJ </a><br>
+    </div>
+    <div class="content">
+      {% block content %}
+      <p>Hello world! This is HTML5 Boilerplate.</p>
+      {% endblock %}
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  </body>
+</html>

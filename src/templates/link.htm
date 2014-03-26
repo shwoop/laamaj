@@ -1,0 +1,11 @@
+{% extends "base.htm" %}
+{% block title %}Link %%KEY%% of {% endblock %}
+{% block head %}
+  {{ super() }}
+  <!-- CSS -->
+{% endblock %}
+{% block content %}
+  <div class="user">{{ user }}</div>
+  <div class="image"><img src="{{ url_for('static'. filename='banner.jpg') }}</img></div>
+  <div class="date">{{ date }}</div>
+{% endblock %}
