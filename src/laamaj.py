@@ -5,7 +5,6 @@
 ##
 
 ## standard library imports
-#from __future__ import print_function   ## for lambda print
 import time, sys, sqlite3, re, urllib2, lxml.html
 
 ## local imports
@@ -32,10 +31,12 @@ def connectHandler(connection, server):
     for channel in channels:
            connection.join(channel)
 
+
 @laamaj.add_on_text
 def terminal_echo(connection, msgfrom, target, text):
     ''' echo irc to terminal. '''
     print(u'{0}: <{1}> {2}'.format(target, msgfrom, text))
+
 
 def get_url_title(url):
     ''' open url and return the title in utf8. '''
@@ -46,19 +47,22 @@ def get_url_title(url):
         request.add_header(u'User-Agent', u'Laamaj/1.0')
         opener = urllib2.build_opener()
         page = opener.open(request)
-        #page = urllib2.urlopen(url.encode(u'utf8'))
         tree = lxml.html.parse(page)
         title = tree.findtext(u'.//title')
         if type(title) is str:
             title = title.decode(u'utf8')
+
     except urllib2.URLError:
         title = u'URLError'
+
     except urllib2.HTTPError:
         title = u'HTTPError'
+
     except:
         title = u'Foqt'
 
     return title
+
 
 @laamaj.add_on_text
 def url_handling(connection, msgfrom, target, text):
@@ -81,6 +85,7 @@ def url_handling(connection, msgfrom, target, text):
             if res == u'repost':
                 msg = u'{0}: The cycle continues...'.format(msgfrom)
                 connection.send_msg(target, msg)
+
 
 laamaj.connect()
 laamaj.process()
