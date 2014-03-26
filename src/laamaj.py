@@ -49,9 +49,6 @@ def get_url_title(url):
         #page = urllib2.urlopen(url.encode(u'utf8'))
         tree = lxml.html.parse(page)
         title = tree.findtext(u'.//title')
-        print url
-        print url.encode(u'utf8')
-        print title
         if type(title) is str:
             title = title.decode(u'utf8')
     except urllib2.URLError:
