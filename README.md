@@ -20,5 +20,3 @@ Usage [/src/laamaj.py]
       -c CONFIG, --config CONFIG
                  Specify config file (default .../laamaj/config.cfg)
 
-[WTFPL]: https://raw.github.com/shwoop/laamaj/master/LICENSE
-

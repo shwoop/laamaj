@@ -1,0 +1,53 @@
+/* pate template css */
+
+.link-block
+{
+    display: table-row;
+    margin-top: 12px;
+    width: 790px;
+}
+
+
+.link
+{
+    display: table-row;
+    margin-top: 12px;
+    width: 790px;
+}
+
+.key
+{
+    display: table-column;
+    height: 32px;
+    width: 90px;
+    font-size: 12px;
+    float: left;
+}
+
+.user
+{
+    display: table-column;
+    height: 32px;
+    width: 90px;
+    font-size: 12px;
+    float: left;
+}
+
+.url
+{
+    display: table-column;
+    height: 32px;
+    width: 450px;
+    font-size: 12px;
+    float: left;
+}
+
+.date
+{
+    display: table-column;
+    height: 32px;
+    width: 120;
+    font-size: 12px;
+    float: left;
+}
+

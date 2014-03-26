@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <title>Tugrik Toilet Goblins</title>
+</head>
+<body>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script type=text/javascript>$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};</script>
+  <script type=text/javascript>
+    $(function() {
+        $('a#more').bind('click', function() {
+            $.getJSON($SCRIPT_ROOT + '/_more', function(data) {
+                $('#shitlist').append(data.result);
+                if (data.end) {
+                    $('a#more').detach();
+                };
+            });
+            return false;
+        });
+    });
+  </script>
+  <center>
+    <img src="{{ url_for('static', filename='banner.jpg') }}"><br>
+    <a href="https://github.com/shwoop/laamaj/"> LAAMAJ </a><br><br>
+    <div id="shitlist">
+      {% for usr, url in urllist %}
+        {{ usr }} : <a href="{{ url }}">{{ url }}</a><br>
+      {% endfor %}
+    </div>
+    <br><br><a id="more" href=#>|||||  MOAR  |||||</a>
+  </center>
+</body>
+</html>
