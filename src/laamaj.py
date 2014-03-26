@@ -40,9 +40,18 @@ def terminal_echo(connection, msgfrom, target, text):
 def get_url_title(url):
     ''' open url and return the title in utf8. '''
     try:
-        page = urllib2.urlopen(url.encode(u'utf8'))
+        if url.endswith(u'/'):
+            url = url[0:-1]
+        request = urllib2.Request(url.encode(u'utf8'))
+        request.add_header(u'User-Agent', u'Laamaj/1.0')
+        opener = urllib2.build_opener()
+        page = opener.open(request)
+        #page = urllib2.urlopen(url.encode(u'utf8'))
         tree = lxml.html.parse(page)
         title = tree.findtext(u'.//title')
+        print url
+        print url.encode(u'utf8')
+        print title
         if type(title) is str:
             title = title.decode(u'utf8')
     except urllib2.URLError:
