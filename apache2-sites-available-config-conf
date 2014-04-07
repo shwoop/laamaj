@@ -1,0 +1,12 @@
+# Example config
+# move to /etc/apache2/sites-available/laamaj.conf
+# and enable via a2esites laamaj
+
+<VirtualHost *:80>
+  ServerName www.testdomain.co.uk
+  WSGIScriptAlias / /var/www/laamaj/laamaj.wsgi
+  <Directory /var/www/laamaj>
+    Order allow,deny
+    Allow from all
+  </Directory>
+</VirtualHost>

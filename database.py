@@ -28,7 +28,7 @@ class Database:
     Connects on init and has add_website and list_last_sites for adding
     or reading a website from the database.
     '''
-    def __init__(self, care_about_threads=False, database=u'../db/laamaj.db',
+    def __init__(self, care_about_threads=False, database=u'db/laamaj.db',
             imgdir = u'../db/img/'):
         ## Create a database connection.
         self._con = None

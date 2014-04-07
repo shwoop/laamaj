@@ -8,15 +8,15 @@ Stand along web portal using the laamaj resources.
 
 import database
 from flask import Flask, render_template, url_for, session, jsonify, request
-from tornado.wsgi import WSGIContainer
-from tornado.httpserver import HTTPServer
-from tornado.ioloop import IOLoop
+#from tornado.wsgi import WSGIContainer
+#from tornado.httpserver import HTTPServer
+#from tornado.ioloop import IOLoop
 from re import match
 
 app = Flask(__name__)
 app.secret_key = u'herpy derpy doo'
 
-_db = database.Database(database=u'/home/shwoop/laamaj/db/laamaj.db')
+_db = database.Database(database=u'/home/user/laamaj/db/laamaj.db')
 
 REC_PER_PAGE = 10
 FETCH_RECORDS_SQL = u'select ws_user, ws_url from websites where \
@@ -137,13 +137,13 @@ def _more():
 
 if __name__ == u'__main__':
     ''' Launch web service pointing to the app. '''
-    https_server = HTTPServer(WSGIContainer(app),
-        ssl_options={u'certfile': u'kyz/cert.pem',
-            u'keyfile': u'kyz/key.pem'})
+    #https_server = HTTPServer(WSGIContainer(app),
+    #    ssl_options={u'certfile': u'kyz/cert.pem',
+    #        u'keyfile': u'kyz/key.pem'})
 
     ## rather than bind to 443 using sudo
     ## set up iptables redirect from 442 to 8869 and run as user
-    https_server.listen(8869)
-    IOLoop.instance().start()
+    #https_server.listen(8869)
+    #IOLoop.instance().start()
 
-    #app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)

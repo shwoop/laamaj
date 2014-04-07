@@ -98,7 +98,7 @@ def get_parameters():
     Add list of config keys
     '''
     
-    options = {u'TESTMODE':False, u'CONFIG':u'../config.cfg'}
+    options = {u'TESTMODE':False, u'CONFIG':u'/var/www/laamaj/config.cfg'}
     options = _parse_arguments(options)
     options = _parse_config(options) 
     _validate_options(options)
