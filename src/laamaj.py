@@ -82,9 +82,9 @@ def url_handling(connection, msgfrom, target, text):
 
             res, out = db.add_website(msgfrom, target, word)
             print (res, out)
-            if res == u'repost':
-                msg = u'{0}: The cycle continues...'.format(msgfrom)
-                connection.send_msg(target, msg)
+            #if res == u'repost':
+                #msg = u'{0}: The cycle continues...'.format(msgfrom)
+                #connection.send_msg(target, msg)
 
 
 laamaj.connect()
