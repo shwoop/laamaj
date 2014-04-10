@@ -15,7 +15,7 @@ app.secret_key = u'herpy derpy doo'
 
 _db = database.Database(database=u'/var/www/laamaj/db/laamaj.db')
 
-REC_PER_PAGE = 10
+REC_PER_PAGE = 12
 FETCH_RECORDS_SQL = u'select ws_user, ws_url from websites where \
 ws_id between {0} and {1} order by ws_id desc'
 
