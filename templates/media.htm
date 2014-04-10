@@ -1,5 +1,5 @@
 {% extends "base.htm" %}
-{% block title %}Links pg {{ page }} - {% endblock %}
+{% block title %}Images pg {{ page }} - {% endblock %}
 {% block head %}
   {{ super() }}
   <!-- CSS -->
@@ -29,6 +29,6 @@
   </div>
   <br />
   {% for page_num in pages %}
-    <a href='/links{{ page_num }}'>{{ page_num }}</a>
+    <a href='/media{{ page_num }}'>{{ page_num }}</a>
   {% endfor %}
 {% endblock %}

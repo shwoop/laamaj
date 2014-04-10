@@ -1,0 +1,12 @@
+{% extends "base.htm" %}
+{% block title %}Pic {{ record }} via {% endblock %}
+{% block head %}
+  {{ super() }}
+  <!--link rel="stylesheet" type="text/css"
+    href="{{ url_for('static', filename='page_links.css') }}"-->
+{% endblock %}
+{% block content %}
+    <p>Please blame {{ user }} for the following picture.<br />
+    Uploaded {{ dat }}.</p>
+    <img src="/img/{{ filename }}">
+{% endblock %}
