@@ -12,3 +12,7 @@ CREATE TABLE websites (
 /
 CREATE INDEX wsindex ON websites(ws_url ASC)
 /
+ALTER TABLE websites
+ADD ws_urltitle varchar(50)
+/
+

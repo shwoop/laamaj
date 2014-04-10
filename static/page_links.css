@@ -6,6 +6,12 @@ html
     font-family: 'Ubuntu', sans-serif;
 }
 
+#container
+{
+    margin: 0 auto;
+    width: 800px;
+}
+
 .footer
 {
     font-size: 8px;
