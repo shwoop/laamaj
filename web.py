@@ -114,7 +114,7 @@ def links(pagenum=1):
 def media(pagenum=1):
     ''' return list of images or youtube.  '''
     results = _db.exe('select ws_id, ws_user, ws_url, ws_date, ws_localfile\
-    from images\
+    from medias\
     order by ws_id asc')
     depth = len(results)
     head = max(1, depth - ((pagenum - 1) * REC_PER_PAGE))
