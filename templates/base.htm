@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html class="no-js">
   <head>
-    {% block head %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Silly shit by silly people  ">
@@ -10,11 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="/static/page_links.css">
+    <link rel="shortcut icon" type="image/png" href="/static/favicon.png"/>
 
-
+    {% block head %}
     <title>{% block title %}{% endblock %} Bummed In The Gob</title>
     <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
     {% endblock %}
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
   </head>
 
   <body>
