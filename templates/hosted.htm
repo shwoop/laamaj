@@ -1,16 +1,33 @@
 {% extends "base.htm" %}
 {% block header %} 
+    <script>
+    // link h and l keys to back and forward respectively
+    $(function() {
+        var h=72, l=76, keymap = {};
+        keymap[ h ] = "#prv";
+        keymap[ l ] = "#nxt";
+        $( document ).on( "keyup", function(event) {
+            var selector = keymap[ event.which ];
+            if ( selector ) {
+                var href = $( selector ).attr( "href" );
+                if ( href ) {
+                    window.location = href;
+                }
+            }
+        });
+    });
+    </script>
     {# Append previous and next shortcuts before content #}
     {% if previous %}
-        <a href="/hosted/{{ previous }}">&lt&lt prev &lt&lt</a>
+        <a id ="prv" href="/hosted/{{ previous }}" title="mapped to 'h' key">&lt&lt prev(h) &lt&lt</a>
     {% else %}
         <b>In the beginning God created the heavens and the earth.<b/>
     {% endif %}
     |
     {% if future %}
-         <a href="/hosted/{{ future }}">&gt&gt next &gt&gt</a>
+         <a id="nxt" href="/hosted/{{ future }}" title="mapped to 'l' key">&gt&gt next(l) &gt&gt</a>
     {% else %}
         {# replace with refresh option if up to date #}
-         <a href="/hosted/{{ record }}">&gt&gt refresh &lt&lt</a>
+         <a id="nxt" href="/hosted/{{ record }}" title="mapped to 'l' key">&gt&gt refresh(l) &lt&lt</a>
     {% endif %}
 {% endblock %}
