@@ -69,6 +69,7 @@ def _more():
 ## end
 
 
+######  Needs refactored to seperate module  #####
 def pad_page_results(results):
     ''' generate truncated name based on url and convert image name to bool. '''
     MAXNAME = 60
@@ -131,25 +132,41 @@ def media(pagenum=1):
 
 @app.route(u'/hosted/<int:record>')
 def hosted_content(record):
+    ''' Publish hosted images and embed youtube clips. '''
+
     head = int(_db.exe(u'select max(ws_id) from websites')[0][0])
+
     if record < 1 or record > head:
         return u'Get Tae Fuck', 404
+
     key, user, url, dat, local = _db.exe(FETCH_SINGLE_RECORD.format(record))[0]
+
+    # get the next/previous content ids for shortcust between pictures
+    future = _db.exe('SELECT ws_id from medias where ws_id > %s limit 1' %
+                        (record))
+    previous = _db.exe('SELECT ws_id from medias where ws_id < %s order \
+                        by ws_id desc limit 1' % (record))
+    # pull result from array of tuples
+    future = future[0][0] if future else False
+    previous = previous[0][0] if previous else False
+
     if local:
         output = render_template(u'image.htm', record=record, user=user,
-                    dat=dat, filename=local) 
+                    dat=dat, filename=local, previous=previous, future=future) 
     else:
         if match(u'^https?://(www.)?youtube.com.*', url):
             ## Hack the url to embed and force https
             url = url.replace('watch?v=','embed/')
             url = url.replace('http:','https:')
             output = render_template(u'yatube.htm', record=record,
-                        user=user, dat=dat, url=url)
+                        user=user, dat=dat, url=url, previous=previous,
+                        future=future)
         else:
             output = u'away', 404
+
     return output
 
 
 if __name__ == u'__main__':
-    ''' Launch web service pointing to the app. '''
+    ''' Launch web service pointing to the app for quick testing. '''
     app.run(host='0.0.0.0', port=80, debug=True)

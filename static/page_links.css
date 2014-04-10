@@ -1,5 +1,16 @@
 /* pate template css */
 
+html
+{
+    font-size: 12px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.footer
+{
+    font-size: 8px;
+}
+
 .link-block
 {
     display: table-row;
@@ -20,7 +31,6 @@
     display: table-column;
     height: 32px;
     width: 90px;
-    font-size: 12px;
     float: left;
 }
 
@@ -29,7 +39,6 @@
     display: table-column;
     height: 32px;
     width: 90px;
-    font-size: 12px;
     float: left;
 }
 
@@ -38,7 +47,6 @@
     display: table-column;
     height: 32px;
     width: 450px;
-    font-size: 12px;
     float: left;
 }
 
@@ -47,7 +55,6 @@
     display: table-column;
     height: 32px;
     width: 120;
-    font-size: 12px;
     float: left;
 }
 

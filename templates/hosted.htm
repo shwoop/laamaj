@@ -1,0 +1,16 @@
+{% extends "base.htm" %}
+{% block header %} 
+    {# Append previous and next shortcuts before content #}
+    {% if previous %}
+        <a href="/hosted/{{ previous }}">&lt&lt prev &lt&lt</a>
+    {% else %}
+        <b>In the beginning God created the heavens and the earth.<b/>
+    {% endif %}
+    |
+    {% if future %}
+         <a href="/hosted/{{ future }}">&gt&gt next &gt&gt</a>
+    {% else %}
+        {# replace with refresh option if up to date #}
+         <a href="/hosted/{{ record }}">&gt&gt refresh &lt&lt</a>
+    {% endif %}
+{% endblock %}
