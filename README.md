@@ -1,4 +1,4 @@
-蟒蛇 LAAMAJ 蟒蛇
+LAAMAJ
 ======
 
 Python IRC Bot Project
@@ -6,7 +6,6 @@ Python IRC Bot Project
 
 Laamaj is a toy project to make an IRC bot to gain experience in python and mess around with related technologies.
 
-released under [WTFPL]
 
 Usage [/src/laamaj.py]
 ---
