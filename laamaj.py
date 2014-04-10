@@ -6,9 +6,10 @@
 ##
 
 ## standard library imports
-import time, sys, sqlite3, re, urllib2, lxml.html
+import time, sys, sqlite3, re
 
 ## local imports
+from url_handling import get_url_title 
 from irc import Irc
 from database import Database
 from config import get_parameters
@@ -45,59 +46,6 @@ def debug_echo(connection, msgfrom, target, text):
     ''' echo irc to terminal for debugging. '''
 
     print(u'%s: <%s> %s' % (target, msgfrom, text))
-
-
-def fetch_url(url, nick = u'laamaj'):
-    ''' Fetch given url. '''
-
-    try:
-        # reddit seems to redirect on trailing '/' so trim
-        if url.endswith('/'):
-            url = url[0:-1]
-
-        request = urllib2.Request(url.encode('utf8'))
-        request.add_header('User-Agent', 'Laamaj/1.0')
-        opener = urllib2.build_opener()
-        page = opener.open(request)
-
-    except urllib2.URLError:
-        page = u'URLError'
-
-    except urllib2.HTTPError:
-        page = u'HTTPError'
-
-    return page
-
-
-def parse_title_from_html(page):
-    ''' Extract contents of title tag from given html. '''
-
-    try:
-        tree = lxml.html.parse(page)
-        title = tree.findtext('.//title')
-        if type(title) is str:
-            title = title.decode('utf8')
-
-    except:
-        title = u'ParseError'
-
-    return title
-
-
-def get_url_title(url):
-    ''' open url and return the title in utf8. '''
-
-    try:
-        page = fetch_url(url)
-        if page == u'URLError' or page == u'HTTPError':
-            title = page
-        else:
-            title = parse_title_from_html(page)
-
-    except:
-        title = u'Foqt'
-
-    return title
 
 
 @laamaj.add_on_text
