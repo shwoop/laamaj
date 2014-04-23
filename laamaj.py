@@ -13,11 +13,12 @@ from url_handling import get_url_title
 from irc import Irc
 from database import Database
 from config import get_parameters
+from ddate import Ddate
 
 #send_lag = 1 #depricated?
 # by default ignore the other bot jamaal
 ignorelist = [u'jamaal']
-# grap config
+# grab config
 options = get_parameters()
 # seed channels list with default from config
 channels = ['#%s' % (options[u'CHANNEL'])]
@@ -29,7 +30,7 @@ laamaj = Irc(options['SERVER'],
             options['NICK'],
             options['IDENT'],
             options['REALNAME'])
-
+DDATE = None
 
 @laamaj.add_on_connected
 def connectHandler(connection, server):
@@ -40,12 +41,31 @@ def connectHandler(connection, server):
            connection.join(channel)
            print(u'Joined channel %s' % (channel))
 
+    # also register global date object
+    global DDATE
+    DDATE = Ddate(connection, channels[0])
+    
+
 
 @laamaj.add_on_text
 def debug_echo(connection, msgfrom, target, text):
     ''' echo irc to terminal for debugging. '''
 
     print(u'%s: <%s> %s' % (target, msgfrom, text))
+
+
+@laamaj.add_on_text
+def control_handling(connection, msgfrom, target, text):
+    ''' Respond to trigger functions. '''
+    
+    if msgfrom in ignorelist:
+        print(u'Ignoring')
+        return
+
+    if text[0] == '!':
+        command = text.split(' ')[0][1:]
+        if command == 'ddate':
+            DDATE.post_date()
 
 
 @laamaj.add_on_text
