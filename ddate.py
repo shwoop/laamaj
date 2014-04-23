@@ -24,10 +24,9 @@ class Ddate():
 
     def fetch_ddate(self):
         ''' fetch ddate from shell.'''
-        #date = check_output(['ddate'])
+        date = check_output(['ddate'])
         # trim `today is ` and return
-        #self.date = date[9:-2]
-        self.date = 'Pungenday, the 40th day of Discord in the YOLD 318'
+        self.date = date[9:-2]
 
     def post_date(self):
         ''' post date to connection/channel supplied on startup. '''

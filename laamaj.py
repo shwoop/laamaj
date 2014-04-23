@@ -44,7 +44,6 @@ def connectHandler(connection, server):
     # also register global date object
     global DDATE
     DDATE = Ddate(connection, channels[0])
-    
 
 
 @laamaj.add_on_text
@@ -56,7 +55,7 @@ def debug_echo(connection, msgfrom, target, text):
 
 @laamaj.add_on_text
 def control_handling(connection, msgfrom, target, text):
-    ''' Respond to trigger functions. '''
+    ''' Respond to trigger words. '''
     
     if msgfrom in ignorelist:
         print(u'Ignoring')
