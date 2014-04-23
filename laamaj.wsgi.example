@@ -1,0 +1,6 @@
+import sys
+# if laamaj isn't installed uncomment the below and
+# set path to the laamaj install location.
+#sys.path.append('/path/to/install/laamaj')
+from web import app as application
+

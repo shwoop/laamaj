@@ -3,9 +3,12 @@
 # and enable via a2esites laamaj
 
 <VirtualHost *:80>
+# set your domain
   ServerName www.testdomain.co.uk
-  WSGIScriptAlias / /var/www/laamaj/laamaj.wsgi
-  <Directory /var/www/laamaj>
+# Set the path to the wsgi config
+  WSGIScriptAlias / /path/to/laamaj/laamaj.wsgi
+# set path to laamaj
+  <Directory /path/to/laamaj>
     Order allow,deny
     Allow from all
   </Directory>

@@ -1,0 +1,12 @@
+# Basic config for bot
+
+# Set IRC server to contact
+SERVER = irc.underworld.no
+# set nick
+NICK = laamaj-bot
+# set channel
+CHANNEL = randomchannel
+# set ident
+IDENT = laamaj-bot
+# set real name
+REALNAME = superman

@@ -1,5 +1,7 @@
 *.pyc
 *.db
 *.db.bk
+*.cfg
+*.wsgi
 db/img/*
 key.pem
