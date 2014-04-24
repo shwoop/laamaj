@@ -15,9 +15,9 @@ class Ddate():
         self.sched = Scheduler()
         self.sched.start()
         self.fetch_ddate()
-        self.sched.add_cron_job(self.change_date, hour=10, minute=15)
+        self.sched.add_cron_job(self.change_ddate, hour=10, minute=15)
 
-    def change_date(self):
+    def change_ddate(self):
         ''' update ddate and announce to channel. '''
         self.fetch_ddate()
         self.post_ddate()
@@ -25,12 +25,12 @@ class Ddate():
     def fetch_ddate(self):
         ''' fetch ddate from shell.'''
         date = check_output(['ddate'])
-        # trim `today is ` and return
-        self.date = date[9:-2]
+        # trim `today is ` and `\r`
+        self.ddate = date[9:-2]
 
-    def post_date(self):
+    def post_ddate(self):
         ''' post date to connection/channel supplied on startup. '''
-        self.con.send_msg(self.target, self.date)
+        self.con.send_msg(self.target, self.ddate)
 
     def __del__():
         ''' Kill scheduler on close. '''
