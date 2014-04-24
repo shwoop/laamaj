@@ -15,6 +15,7 @@ class Ddate():
         self.sched = Scheduler()
         self.sched.start()
         self.fetch_ddate()
+        # scheduler for 0915 (server is gmt+1)
         self.sched.add_cron_job(self.change_ddate, hour=10, minute=15)
 
     def change_ddate(self):
@@ -25,7 +26,7 @@ class Ddate():
     def fetch_ddate(self):
         ''' fetch ddate from shell.'''
         date = check_output(['ddate'])
-        # trim `today is ` and `\r`
+        # trim `today is ` and `\n`
         self.ddate = date[9:-2]
 
     def post_ddate(self):
