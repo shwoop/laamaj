@@ -4,6 +4,7 @@
 from apscheduler.scheduler import Scheduler
 from subprocess import check_output
 
+
 class Ddate():
     ''' Scheduling class to post ddate each morning. '''
 
