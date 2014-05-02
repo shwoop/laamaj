@@ -34,6 +34,6 @@ class Ddate():
         ''' post date to connection/channel supplied on startup. '''
         self.con.send_msg(self.target, self.ddate)
 
-    def __del__():
+    def __del__(self):
         ''' Kill scheduler on close. '''
         self.sched.shutdown()
