@@ -33,7 +33,7 @@ laamaj = Irc(options['SERVER'],
 DDATE = None
 
 @laamaj.add_on_connected
-def connectHandler(connection, server):
+def connectJoinChannels(connection, server):
     ''' Join channels when connecting. '''
 
     print(u'Connected to %s' % (server))
@@ -41,9 +41,13 @@ def connectHandler(connection, server):
            connection.join(channel)
            print(u'Joined channel %s' % (channel))
 
-    # also register global date object
+
+@laamaj.add_on_connected
+def connectScheduleDdate(connection, server):
+    ''' On IRC connection, instanciate global irc ddate object. '''
     global DDATE
-    DDATE = Ddate(connection, channels[0])
+    if DDATE == None:
+        DDATE = Ddate(connection, channels[0])
 
 
 @laamaj.add_on_text
@@ -64,7 +68,7 @@ def control_handling(connection, msgfrom, target, text):
     if text[0] == '!':
         command = text.split(' ')[0][1:]
         if command == 'ddate':
-            DDATE.post_date()
+            DDATE.post_ddate()
 
 
 @laamaj.add_on_text
