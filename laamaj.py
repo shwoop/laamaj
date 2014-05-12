@@ -65,10 +65,16 @@ def control_handling(connection, msgfrom, target, text):
         print(u'Ignoring')
         return
 
-    if text[0] == '!':
-        command = text.split(' ')[0][1:]
-        if command == 'ddate':
-            DDATE.post_ddate()
+    # commands are prefixed with bang
+    if len(text) > 0 and text[0] == '!':
+        arguments = text.split(' ')
+
+        # ignore lone bang
+        if len(arguments[0]) > 1:
+            command = arguments[0][1:]
+
+            if command == 'ddate':
+                DDATE.post_ddate()
 
 
 @laamaj.add_on_text
