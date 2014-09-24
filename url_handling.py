@@ -31,7 +31,7 @@ def fetch_url(url, nick = u'laamaj'):
     try:
         # reddit seems to redirect on trailing '/' so trim
         if url.endswith('/'):
-            url = url[0:-1]
+            url = url[:-1]
 
         request = urllib2.Request(url.encode('utf8'))
         request.add_header('User-Agent', 'Laamaj/1.0')
