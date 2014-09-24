@@ -3,7 +3,7 @@
 
 ##
 ##      LAAMAJ
-##      Url handling pish
+##      Url handling
 ##
 
 
@@ -58,7 +58,7 @@ def get_url_title(url):
             title = parse_title_from_html(page)
 
     except:
-        title = u'Foqt'
+        title = u'Fatal url title exception.'
 
     return title
 
