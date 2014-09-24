@@ -52,7 +52,7 @@ def get_url_title(url):
 
     try:
         page = fetch_url(url)
-        if page == u'URLError' or page == u'HTTPError':
+        if page in {u'URLError', u'HTTPError'}:
             title = page
         else:
             title = parse_title_from_html(page)
